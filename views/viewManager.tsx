@@ -1,7 +1,7 @@
-// Library
-import { ScrollView } from 'react-native';
 // Components
-import Tutorial from '../components/tutorial/tutorialButtons';
+import Browser from '../components/fileBrowser/browser';
+// Library
+import { ScrollView, View } from 'react-native';
 // Styles
 import theme from '../App.style';
 
@@ -11,17 +11,18 @@ const ViewManager = ({ view } : any) => {
     style={{
       width: view.width,
       height: view.height,
+      backgroundColor: '#202029'
     }}
     contentContainerStyle={{
-      alignItems: 'center',
+      flex: 1,
+      flexWrap: 'wrap',
+      flexDirection: 'row',
       justifyContent: 'space-evenly',
-      width: view.width,
-      minHeight: view.height,
-      backgroundColor: theme.default.backgroundColor
+      width: view.width
     }}
   >
-    <Tutorial/>
-  </ScrollView>;
+    <Browser view={view}/>
+  </ScrollView>
 };
 
 

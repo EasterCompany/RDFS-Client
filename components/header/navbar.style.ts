@@ -4,7 +4,8 @@ import { StyleSheet, Platform } from 'react-native';
 const header = StyleSheet.create({
 
   container: {
-    textAlignVertical: 'center',
+    zIndex: '9999999999999',
+    verticalAlign: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -20,7 +21,7 @@ const header = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 34,
-    height: 34,
+    height: 34
   },
 
 });

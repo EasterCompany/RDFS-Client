@@ -3,7 +3,7 @@ import * as Font from 'expo-font';
 import { useState, useEffect, useRef } from 'react';
 import { isTemplateTag } from './shared/library/devTools';
 import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
-import { __INIT_USER__, USER, logout, oapi, isNative } from './shared/library/api';
+import { __INIT_USER__, USER, logout, oapi, isNative, serverAdr } from './shared/library/api';
 import {
   View,
   Text,
@@ -68,10 +68,7 @@ const App = () => {
     screen: screenDimensions,
   });
   const [serverStatus, setServerStatus] = useState(0);
-  const statusSocket = useRef(new WebSocket(`${process.env.API_DOMAIN}/api/rdfs/status`
-    .replace('https://', 'wss://')
-    .replace('http://', 'ws://')
-  )).current;
+  const statusSocket = useRef(null);
 
   const toggleNavMenu = () => setNavMenu(!navMenuOpen);
   const toggleUserModal = () => setUserModal(!userModalOpen);
@@ -106,9 +103,16 @@ const App = () => {
       };
     })
 
-    statusSocket.onopen = () => setServerStatus(1);
-    statusSocket.onclose = (e) => setServerStatus(-1);
-    statusSocket.onerror = (e) => setServerStatus(-1);
+    if (statusSocket.current === null) {
+      statusSocket.current = new WebSocket(
+        `${serverAdr}api/ws/rdfs/status`
+          .replace('https://', 'wss://')
+          .replace('http://', 'ws://')
+      );
+      statusSocket.current.onopen = () => setServerStatus(1);
+      statusSocket.current.onclose = (e) => setServerStatus(-1);
+      statusSocket.current.onerror = (e) => setServerStatus(-1);
+    }
 
     // Updates screen, window & viewport variables when the screen or window size changes
     const subscription = Dimensions.addEventListener('change', ({window, screen}) => {
@@ -130,6 +134,7 @@ const App = () => {
     <View>
       {/* GUI Elements */}
       <Navbar
+        view={dimensions.window}
         loggedIn={userIsLoggedIn}
         onPressLogin={toggleLoginModal}
         onPressRegister={toggleRegisterModal}
@@ -143,7 +148,7 @@ const App = () => {
         serverStatus === 0 ? <Loading view={dimensions.view}/> :
         serverStatus === -1 ? <ServerOffline view={dimensions.view}/> :
         serverStatus === 1 && userIsLoggedIn ? <ViewManager view={dimensions.view}/> :
-        <NoUser view={dimensions.view}/>
+        <NoUser view={dimensions.window}/>
       }
 
       {/* Modals & Overlays */}

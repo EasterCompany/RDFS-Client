@@ -23,6 +23,7 @@ const SideMenu = ({ view, children }) => {
     backgroundColor: 'rgba(0,0,0,.66)'
   }}>
     <Animated.View style={{
+      overflow: 'auto',
       position: 'absolute',
       alignItems: 'center',
       bottom: 0,

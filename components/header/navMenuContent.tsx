@@ -2,21 +2,25 @@
 import { View, Text, StyleSheet } from 'react-native';
 // Components
 import LinkBtn from '../buttons/link';
+import TextBtn from '../buttons/text';
 
 
 const NavMenuContent = () => <>
-  <Header text="Educational Resources"/>
-  <Option text="Learn Native" link="https://reactnative.dev/docs/getting-started"/>
-  <Option text="Learn Overlord" link="https://easter.company/overlord/getting_started"/>
-  <Option text="Learn AWS" link="https://aws.amazon.com/free/compute/lightsail-vs-ec2/"/>
-  <Option text="Learn ePanel" link="https://easter.company/overlord/epanel" last/>
+  <Header text="Directories"/>
+  <Option text="All Files"/>
+  <Option text="Pictures"/>
+  <Option text="Videos"/>
+  <Option text="Audio"/>
+  <Option text="Games"/>
+  <Option text="TV & Movies"/>
+  <Option text="Documents" last/>
 </>;
 
 
 const Header = ({ text }) => <Text style={navMenu.header}>{text}</Text>;
 
 
-const Option = ({ text, link, last }) => <LinkBtn
+const Link = ({ text, link, last }) => <LinkBtn
   text={text}
   link={link}
   style={[ navMenu.option, { borderBottomWidth: last ? 1 : 0 } ]}
@@ -24,6 +28,15 @@ const Option = ({ text, link, last }) => <LinkBtn
 >
   <Text style={navMenu.optionText}>{text}</Text>
 </LinkBtn>
+
+
+const Option = ({ text, last }) => <TextBtn
+  text={text}
+  style={[ navMenu.option, { borderBottomWidth: last ? 1 : 0 } ]}
+  onHover={navMenu.optionHover}
+>
+  <Text style={navMenu.optionText}>{text}</Text>
+</TextBtn>
 
 
 const navMenu = StyleSheet.create({
@@ -49,12 +62,14 @@ const navMenu = StyleSheet.create({
     margin: 0,
     borderWidth: 1,
     borderColor: '#ffff',
+    borderRadius: 0,
     borderLeftWidth: 0,
-    borderRightWidth: 0
+    borderRightWidth: 0,
+    backgroundColor: 'rgba(0,0,0,0)'
   },
 
   optionHover: {
-    backgroundColor: 'rgba(175,175,175,0.2)'
+    backgroundColor: 'rgba(175,175,175,0.25)'
   },
 
   optionText: {

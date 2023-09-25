@@ -3,6 +3,7 @@ import theme from '../App.style';
 import warningImg from '../assets/images/warning.png'
 // Library
 import { ScrollView, Text, Image } from 'react-native';
+import { serverAdr } from '../shared/library/api';
 
 
 const ServerOffline = ({ view }) => {
@@ -12,10 +13,12 @@ const ServerOffline = ({ view }) => {
       height: view.height,
     }}
     contentContainerStyle={{
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: view.width,
-      minHeight: view.height,
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'left',
+      width: '100%',
+      minHeight: 'fit-content',
+      paddingBottom: '5%',
       backgroundColor: theme.default.backgroundColor
     }}
   >
@@ -25,7 +28,7 @@ const ServerOffline = ({ view }) => {
       style={imageStyle}
     />
     <Text style={textStyle}>Sorry!</Text>
-    <Text style={textStyle}>Server Offline</Text>
+    <Text style={text2Style}>The server hosted at <code>{serverAdr}</code> is offline.</Text>
   </ScrollView>;
 };
 
@@ -39,6 +42,14 @@ const textStyle = {
   textAlign: 'center',
   color: 'white',
   fontSize: 28,
+  fontFamily: 'Metro',
+  padding: 8,
+};
+
+const text2Style = {
+  textAlign: 'center',
+  color: 'white',
+  fontSize: 18,
   fontFamily: 'Metro',
   padding: 8,
 };

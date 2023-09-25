@@ -15,10 +15,10 @@ const Loading = ({ view }) => {
       height: view.height,
     }}
     contentContainerStyle={{
+      flex: 1,
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      width: view.width,
-      minHeight: view.height,
       backgroundColor: theme.default.backgroundColor
     }}
   >
