@@ -7,10 +7,10 @@ import CalendarIcon from '../../assets/images/calendar.png';
 import theme from '../../App.style';
 
 
-const InputDate = ({ label, textAlign, onChangeText, validInput, onPressEnter }) => {
-  const dayInput = useRef();
-  const monthInput = useRef();
-  const yearInput = useRef();
+const InputDate = ({label, textAlign, onChangeText, validInput, onPressEnter}:any) => {
+  const dayInput = useRef<any>(null);
+  const monthInput = useRef<any>(null);
+  const yearInput = useRef<any>(null);
   const [ currentDay, setDay ] = useState('');
   const [ currentMonth, setMonth ] = useState('');
   const [ currentYear, setYear ] = useState('');

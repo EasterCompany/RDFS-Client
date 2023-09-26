@@ -16,7 +16,7 @@ import ImgBtn from '../buttons/img';
 import theme from '../../App.style';
 
 
-const FadeModal = ({ title, visible, style, onClose, children }) => {
+const FadeModal = ({title, visible, style, onClose, children}:any) => {
   const screen = Dimensions.get('screen');
   const window = Dimensions.get('window');
   return <Modal

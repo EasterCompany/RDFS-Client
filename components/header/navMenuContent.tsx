@@ -1,26 +1,35 @@
 // Library
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet, ViewStyle, NativeEventEmitter} from 'react-native';
 // Components
 import LinkBtn from '../buttons/link';
 import TextBtn from '../buttons/text';
 
 
-const NavMenuContent = () => <>
-  <Header text="Directories"/>
-  <Option text="All Files"/>
-  <Option text="Pictures"/>
-  <Option text="Videos"/>
-  <Option text="Audio"/>
-  <Option text="Games"/>
-  <Option text="TV & Movies"/>
-  <Option text="Documents" last/>
-</>;
+const NavMenuContent = () => {
+  const eventEmitter = new NativeEventEmitter();
+
+  const setView = (view:string) => {
+    eventEmitter.emit("navMenuChangeView", view);
+    eventEmitter.emit("closeStaticUI", null);
+  };
+
+  return <>
+    <Header text="Directories"/>
+    <Option text="All Files" onPress={() => setView('browser')}/>
+    <Option text="Pictures" onPress={() => setView('browser')}/>
+    <Option text="Videos" onPress={() => setView('browser')}/>
+    <Option text="Audio" onPress={() => setView('browser')}/>
+    <Option text="Games" onPress={() => setView('browser')}/>
+    <Option text="TV & Movies" onPress={() => setView('browser')}/>
+    <Option text="Documents" onPress={() => setView('browser')} last/>
+  </>;
+};
 
 
-const Header = ({ text }) => <Text style={navMenu.header}>{text}</Text>;
+const Header = ({text}:any) => <Text style={navMenu.header}>{text}</Text>;
 
 
-const Link = ({ text, link, last }) => <LinkBtn
+const Link = ({text, link, last}:any) => <LinkBtn
   text={text}
   link={link}
   style={[ navMenu.option, { borderBottomWidth: last ? 1 : 0 } ]}
@@ -30,9 +39,17 @@ const Link = ({ text, link, last }) => <LinkBtn
 </LinkBtn>
 
 
-const Option = ({ text, last }) => <TextBtn
+type Option = {
+  text: string,
+  onPress: () => void,
+  last: boolean
+};
+
+
+const Option = ({text, onPress, last}:Option) => <TextBtn
   text={text}
   style={[ navMenu.option, { borderBottomWidth: last ? 1 : 0 } ]}
+  onPress={onPress}
   onHover={navMenu.optionHover}
 >
   <Text style={navMenu.optionText}>{text}</Text>

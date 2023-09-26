@@ -1,57 +1,60 @@
 // Assets
-import theme from '../App.style';
 import warningImg from '../assets/images/warning.png'
 // Library
-import { ScrollView, Text, Image } from 'react-native';
+import { ScrollView, Text, Image, TextStyle, ImageStyle, ViewStyle } from 'react-native';
 import { serverAdr } from '../shared/library/api';
 
 
-const ServerOffline = ({ view }) => {
+const ServerOffline = ({view}:any) => {
+
+  const scroll:ViewStyle = {
+    width: view.width,
+    height: view.height,
+  };
+
+  const container:ViewStyle = {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingBottom: '5%'
+  };
+
+  const image:ImageStyle = {
+    width: 128,
+    height: 128
+  };
+
+  const h1:TextStyle = {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 28,
+    fontFamily: 'Metro',
+    padding: 8,
+  };
+
+  const h2:TextStyle = {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Metro',
+    padding: 8,
+  };
+
   return <ScrollView
-    style={{
-      width: view.width,
-      height: view.height,
-    }}
-    contentContainerStyle={{
-      flex: 1,
-      flexDirection: 'column',
-      alignItems: 'left',
-      width: '100%',
-      minHeight: 'fit-content',
-      paddingBottom: '5%',
-      backgroundColor: theme.default.backgroundColor
-    }}
+    style={scroll}
+    contentContainerStyle={container}
   >
     <Image
       resizeMode="contain"
       source={warningImg}
-      style={imageStyle}
+      style={image}
     />
-    <Text style={textStyle}>Sorry!</Text>
-    <Text style={text2Style}>The server hosted at <code>{serverAdr}</code> is offline.</Text>
+    <Text style={h1}>Sorry!</Text>
+    <Text style={h2}>The server hosted at <code>{serverAdr}</code> is offline.</Text>
   </ScrollView>;
 };
 
-
-const imageStyle = {
-  width: 128,
-  height: 128
-};
-
-const textStyle = {
-  textAlign: 'center',
-  color: 'white',
-  fontSize: 28,
-  fontFamily: 'Metro',
-  padding: 8,
-};
-
-const text2Style = {
-  textAlign: 'center',
-  color: 'white',
-  fontSize: 18,
-  fontFamily: 'Metro',
-  padding: 8,
-};
 
 export default ServerOffline;

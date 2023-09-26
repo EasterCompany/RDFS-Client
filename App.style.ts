@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 
-const theme = StyleSheet.create({
+const theme:any = StyleSheet.create({
 
   default: {
     color: '#ffff',
@@ -67,6 +67,7 @@ const theme = StyleSheet.create({
   },
 
   loginInputLabel: {
+    //@ts-ignore-next-line
     userSelect: 'none',
     fontSize: 12,
     fontFamily: 'Metro-Bold'
@@ -120,7 +121,6 @@ const theme = StyleSheet.create({
   subtext: {
     color: '#0000',
     textAlign: 'center',
-    fontWeight: 200,
     margin: '1%',
     fontSize: 12,
     fontFamily: 'Metro-Light'
@@ -145,24 +145,25 @@ const theme = StyleSheet.create({
   },
 
   buttonHover: {
-    opacity: '75%'
+    opacity: .75
   },
 
   buttonPress: {
-    opacity: '25%'
+    opacity: .25
   },
 
   buttonText: {
+    //@ts-ignore-next-line
     userSelect: 'none',
     textAlign: 'center',
-    textAlignVertical: 'center',
+    verticalAlign: 'middle',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     color: '#ffff',
     fontSize: 16,
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontFamily: 'Metro',
     textTransform: 'uppercase',
   },
@@ -180,17 +181,17 @@ const theme = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    overflowX: 'hidden',
+    overflow: 'scroll',
     width: '100%',
     minWidth: 300,
     maxWidth: Platform.OS === 'web' ? 1024 : '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
-    elevation: 5,
     borderBottomLeftRadius: Platform.OS === 'web' ? 6 : 0,
     borderBottomRightRadius: Platform.OS === 'web' ? 6 : 0,
     backgroundColor: '#E5E7EB',
-    boxShadow: '1px 1px 10px rgba(0,0,0,.66)',
+    boxShadow: '5px 5px 25px #000000',
+    elevation: 5,
     fontFamily: 'Metro'
   },
 
@@ -208,11 +209,13 @@ const theme = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     backgroundColor: '#282C34',
-    boxShadow: '1px 1px 10px rgba(0,0,0,.66)',
+    boxShadow: '5px 5px 25px #000000',
+    elevation: 5,
     fontFamily: 'Metro'
   },
 
   modalTitle: {
+    //@ts-ignore-next-line
     userSelect: 'none',
     color: '#ffff',
     fontSize: 22,

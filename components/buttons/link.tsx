@@ -5,7 +5,7 @@ import { View, Text, Pressable, Linking } from 'react-native';
 import theme from '../../App.style';
 
 
-const LinkBtn = ({ text, style, onHover, onPress, link, children}) => {
+const LinkBtn = ({text, style, onHover, onPress, link, children}:any) => {
   const [ isHover, setHover ] = useState(false);
   const [ isPress, setPress ] = useState(false);
   return <Pressable

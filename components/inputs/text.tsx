@@ -6,7 +6,7 @@ const InputText = ({
   icon, label, placeholder, secureText, maxLength,
   autoCapitalize, validInput, onChangeText, ref,
   autoComplete, onPressEnter
-}) => {
+}:any) => {
   const borderHighlight = {
     borderColor: '#ffff',
     borderWidth: 0

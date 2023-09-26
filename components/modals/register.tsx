@@ -22,14 +22,14 @@ import { EmailInput, PasswordInput, SubmitBtn } from './login';
 import theme from '../../App.style';
 
 
-const RegisterModal = ({ view, visible, onClose, onRegister }) => {
-  const [ isLoading, setLoading ] = useState<boolean>(false);
-  const [ currentStep, setCurrentStep ] = useState<number>(1);
-  const [ registerFailed, setRegisterFailed ] = useState<string>("");
+const RegisterModal = ({view, visible, onClose, onRegister}:any) => {
+  const [ isLoading, setLoading ] = useState(false);
+  const [ currentStep, setCurrentStep ] = useState(1);
+  const [ registerFailed, setRegisterFailed ] = useState("");
   const [ emailIsValid, setEmailIsValid ] = useState(null);
   const [ passwordIsValid, setPasswordIsValid ] = useState(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
-  const input = useRef<object>({
+  const input = useRef<any>({
     email: '',
     password: '',
     confirmPassword: '',
@@ -56,10 +56,10 @@ const RegisterModal = ({ view, visible, onClose, onRegister }) => {
   const validateEmail = () => {
     if (input.email === '') return setEmailIsValid(null);
     if (!input.email.includes('@')) return setEmailIsValid(false);
-    const p1 = input.email.split('@')
-    if (!p1[0].length > 0 || !p1[1].includes('.')) return setEmailIsValid(false);
-    const p2 = p1[1].split('.')
-    if (!p2[0].length > 0 || !p2[1].length > 0) return setEmailIsValid(false);
+    const p1:Array<string> = input.email.split('@')
+    if (!(p1[0].length > 0) || !(p1[1].includes('.'))) return setEmailIsValid(false);
+    const p2:Array<string> = p1[1].split('.')
+    if (!(p2[0].length > 0) || !(p2[1].length > 0)) return setEmailIsValid(false);
     return setEmailIsValid(true);
   };
 
@@ -149,7 +149,7 @@ const RegisterModal = ({ view, visible, onClose, onRegister }) => {
       marginTop: 0,
       marginBottom: 32
     }]}>Sign Up</Text>
-    <Text style={[ theme.subtext ], { marginTop: -16, marginBottom: 32 }}>({currentStep}/2)</Text>
+    <Text style={[theme.subtext, {marginTop: -16, marginBottom: 32}]}>({currentStep}/2)</Text>
     <Animated.View style={{ flexDirection: 'row', left: slideAnim }}>
 
       {/* Step: 1 */}

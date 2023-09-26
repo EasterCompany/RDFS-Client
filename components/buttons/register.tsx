@@ -5,8 +5,8 @@ import { Text, Pressable } from 'react-native';
 import theme from '../../App.style';
 
 
-const RegisterBtn = ({ onPress }) => {
-  return <Pressable onPress={onPress} style={[ theme.button, {
+const RegisterBtn = ({onPress}:any) => {
+  return <Pressable onPress={onPress} style={[theme.button, {
     width: 100,
     height: 34,
     backgroundColor: 'transparent'

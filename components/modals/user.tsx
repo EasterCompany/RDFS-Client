@@ -1,6 +1,6 @@
 // Library
 import { useState, useRef } from 'react';
-import { View, Text, Image, Platform } from 'react-native';
+import { View, Text, Image, Platform, ViewStyle, ImageStyle, TextStyle } from 'react-native';
 import { __INIT_USER__, oapi, logout, deleteAllCookies, isLoggedIn } from '../../shared/library/api';
 import { launchImageLibraryAsync, MediaTypeOptions, UIImagePickerControllerQualityType } from 'expo-image-picker';
 // Assets
@@ -16,7 +16,7 @@ import { EmailInput, PasswordInput, SubmitBtn } from './login';
 import theme from '../../App.style';
 
 
-const UserModal = ({ user, reCheckUserData, visible, onClose }) => {
+const UserModal = ({user, reCheckUserData, visible, onClose}:any) => {
   const [ currentView, setView ] = useState<string>('profile');
 
   const refreshUser = () => oapi(
@@ -230,8 +230,8 @@ const ChangeEmail = ({ user, onDone, onCancel }) => {
 
 
 const ChangePassword = ({ user, onDone, onCancel }) => {
-  const [ successMessage, setSuccess ] = useState<boolean>(false);
-  const [ errorMessage, setError ] = useState<string>("");
+  const [ successMessage, setSuccess ] = useState(false);
+  const [ errorMessage, setError ] = useState("");
   const passwordInput = useRef({
     current: '',
     new: '',
@@ -297,7 +297,7 @@ const ChangePassword = ({ user, onDone, onCancel }) => {
 
 
 const ConfirmDeleteAccount = ({ user, onDone, onCancel }) => {
-  const [ errorMessage, setError ] = useState<string>("");
+  const [ errorMessage, setError ] = useState("");
   const passwordInput = useRef("");
 
   const onConfirmDeleteAccount = () => oapi('user/delete', setError, onDone, {
@@ -354,14 +354,14 @@ const userFullName = (user) => {
 }
 
 
-const subView = {
+const subView:ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   width: '100%',
   minHeight: '100%'
 }
 
-const bannerSection = {
+const bannerSection:ViewStyle = {
   top: 0,
   width: '100%',
   height: '20%',
@@ -369,13 +369,13 @@ const bannerSection = {
   backgroundColor: '#202029'
 };
 
-const bannerImage = {
+const bannerImage:ImageStyle = {
   width: '100%',
   height: '100%',
   marginBottom: '-20%'
 }
 
-const displayImage = {
+const displayImage:ImageStyle = {
   width: 132,
   height: 132,
   marginTop: 'auto',
@@ -389,34 +389,34 @@ const displayImage = {
   backgroundColor: '#202029'
 };
 
-const detail = {
+const detail:TextStyle = {
   color: '#202029',
   textAlign: 'center',
   fontSize: 18,
-  fontWeight: 500,
+  fontWeight: "500",
   fontFamily: 'Metro',
   marginBottom: 12,
 };
 
-const detailMinor = {
+const detailMinor:TextStyle = {
   color: '#202029',
   textAlign: 'center',
   fontSize: 16,
-  fontWeight: 500,
+  fontWeight: "500",
   fontFamily: 'Metro-Thin',
   marginBottom: 12,
 };
 
-const detailSection = {
+const detailSection:ViewStyle = {
   marginBottom: 'auto'
 };
 
-const formBtn = {
+const formBtn:ViewStyle = {
   marginTop: 0,
   marginBottom: 16
 }
 
-const profileBtn = {
+const profileBtn:any = {
   color: '#202029',
   height: 52,
   borderWidth: 0,
@@ -426,14 +426,14 @@ const profileBtn = {
   backgroundColor: 'transparent',
 };
 
-const profileBtnSection = {
+const profileBtnSection:ViewStyle = {
   width: '100%',
   marginTop: 48,
   borderTopWidth: 2,
   borderColor: 'rgba(25,25,25,.25)'
 };
 
-const deleteAccountBtn = {
+const deleteAccountBtn:any = {
   color: '#ffff',
   height: 52,
   borderWidth: 0,

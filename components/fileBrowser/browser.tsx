@@ -1,55 +1,27 @@
 // Components
 import File from './file';
 // Library
-import { ScrollView, View } from 'react-native';
+import { useState, useRef } from 'react';
+import { ScrollView, View, NativeEventEmitter } from 'react-native';
 
 
-const Browser = ({ view }) => {
+const Browser = ({view}:any) => {
+  const [userFiles, setUserFiles] = useState<any>([]);
+  const eventHandlersAdded = useRef<bool>(false);
+  const eventEmitter = new NativeEventEmitter();
   const fileSize = view.width / 8.88;
-  return <>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-    <File size={fileSize}/>
-  </>
+
+  if (!eventHandlersAdded.current) {
+    eventEmitter.addListener('RDFSGenericDataMessage', (event:any) => {
+      console.log(event);
+      setUserFiles(event['userFiles']);
+    });
+    eventHandlersAdded.current = true;
+  };
+
+  return <>{
+    userFiles.map((file:any) => <File size={fileSize}/>)
+  }</>
 };
 
 

@@ -16,7 +16,7 @@ import ImgBtn from '../buttons/img';
 import theme from '../../App.style';
 
 
-const SlideModal = ({ title, visible, style, onClose, children }) => {
+const SlideModal = ({title, visible, style, onClose, children}:any) => {
   const window = Dimensions.get('window');
   return <Modal
     animationType="slide"

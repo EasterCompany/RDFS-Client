@@ -21,10 +21,10 @@ import InputText from '../inputs/text';
 import theme from '../../App.style';
 
 
-const LoginModal = ({ visible, onClose, onLogin }) => {
+const LoginModal = ({visible, onClose, onLogin}:any) => {
   const [ isLoading, setLoading ] = useState<boolean>(false);
   const [ loginFailed, setLoginFailed ] = useState<boolean>(false);
-  const loginInput = useRef<object>({
+  const loginInput = useRef({
     email: '',
     password: ''
   });
@@ -76,7 +76,7 @@ const LoginModal = ({ visible, onClose, onLogin }) => {
 };
 
 
-export const EmailInput = ({ label, onChangeText, validEmail, ref, autoComplete, onPressEnter }) => <InputText
+export const EmailInput = ({label, onChangeText, validEmail, ref, autoComplete, onPressEnter}:any) => <InputText
   ref={ref}
   icon={EmailIcon}
   label={ label === undefined ? "Email" : label }
@@ -90,7 +90,7 @@ export const EmailInput = ({ label, onChangeText, validEmail, ref, autoComplete,
 />;
 
 
-export const PasswordInput = ({ label, onChangeText, validPassword, autoComplete, onPressEnter }) => <InputText
+export const PasswordInput = ({label, onChangeText, validPassword, autoComplete, onPressEnter}:any) => <InputText
   icon={PasswordIcon}
   label={label}
   placeholder="**********"
@@ -112,7 +112,7 @@ const LoginFailedErrorMessage = () => {
 };
 
 
-export const SubmitBtn = ({text, onSubmit, style}) => {
+export const SubmitBtn = ({text, onSubmit, style}:any) => {
   return <TextBtn text={text} onPress={onSubmit} style={[{
     marginTop: 16,
     marginBottom: 32,

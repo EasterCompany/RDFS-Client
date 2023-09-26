@@ -34,6 +34,12 @@
           "photosPermission": "This app allows you to upload photos.",
           "cameraPermission": "This app allows you to take & upload photos."
         }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
       ]
     ]
   }

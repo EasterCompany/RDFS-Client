@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable } from 'react-native';
 
 
-const File = ({ size }) => {
+const File = ({size}:any) => {
   const [ isHover, setHover ] = useState(false);
   const [ isPress, setPress ] = useState(false);
 

@@ -5,8 +5,8 @@ import { Text, Pressable } from 'react-native';
 import theme from '../../App.style';
 
 
-const LoginBtn = ({ onPress }) => {
-  return <Pressable onPress={onPress} style={[ theme.button, { width: 100, height: 34 }]}>
+const LoginBtn = ({onPress}:any) => {
+  return <Pressable onPress={onPress} style={[theme.button, {width: 100, height: 34}]}>
     <Text style={theme.buttonText}>Login</Text>
   </Pressable>
 }

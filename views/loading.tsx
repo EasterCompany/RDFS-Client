@@ -2,13 +2,20 @@
 import {
   Text,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  TextStyle
 } from 'react-native';
-// Styles
-import theme from '../App.style';
 
 
-const Loading = ({ view }) => {
+const Loading = ({view}:any) => {
+
+  const loadingTextStyle:TextStyle = {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Metro',
+    padding: 16
+  };
+
   return <ScrollView
     style={{
       width: view.width,
@@ -18,21 +25,13 @@ const Loading = ({ view }) => {
       flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.default.backgroundColor
+      justifyContent: 'center'
     }}
   >
     <ActivityIndicator animating={true} color="white" size="large"/>
-    <Text style={textStyle}>Loading...</Text>
+    <Text style={loadingTextStyle}>Loading...</Text>
   </ScrollView>;
 };
 
-
-const textStyle = {
-  color: 'white',
-  fontSize: 16,
-  fontFamily: 'Metro',
-  padding: 16
-};
 
 export default Loading;

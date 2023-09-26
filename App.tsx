@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { isTemplateTag } from './shared/library/devTools';
 import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
 import { __INIT_USER__, USER, logout, oapi, isNative, serverAdr } from './shared/library/api';
+import { NativeEventEmitter } from 'react-native';
 import {
   View,
   Text,
@@ -11,7 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   Dimensions,
-  Platform
+  Platform,
 } from 'react-native';
 // Components
 import Navbar from './components/header/navbar';
@@ -27,6 +28,7 @@ import ServerOffline from './views/serverOffline';
 import ViewManager from './views/viewManager';
 // Styles
 import theme from './App.style';
+import { isLoggedIn } from '../dashboard/src/shared/library/api';
 
 /* Dev Mode Web Compatibility */
 if (!isNative) {
@@ -68,7 +70,9 @@ const App = () => {
     screen: screenDimensions,
   });
   const [serverStatus, setServerStatus] = useState(0);
-  const statusSocket = useRef(null);
+  const eventHandlersAdded = useRef(false);
+  const infoSocket = useRef(null);
+  const eventEmitter = new NativeEventEmitter();
 
   const toggleNavMenu = () => setNavMenu(!navMenuOpen);
   const toggleUserModal = () => setUserModal(!userModalOpen);
@@ -79,11 +83,14 @@ const App = () => {
     setUserIsLoggedIn(localData.session !== undefined);
   });
 
+  if (!eventHandlersAdded.current) {
+    eventEmitter.addListener("closeStaticUI", () => {setUserModal(false);setNavMenu(false);});
+    eventHandlersAdded.current = true;
+  };
+
   useEffect(() => {
-    // Loads Custom Fonts
     loadCustomFonts();
 
-    // Refresh user data when reopening the app
     if (userData === undefined) USER().then((localData) => {
       setUserData(localData);
       if (localData.session !== undefined) {
@@ -103,30 +110,49 @@ const App = () => {
       };
     })
 
-    if (statusSocket.current === null) {
-      statusSocket.current = new WebSocket(
-        `${serverAdr}api/ws/rdfs/status`
+    if (infoSocket.current === null && userIsLoggedIn) {
+      infoSocket.current = new WebSocket(
+        `${serverAdr}api/ws/rdfs/info`
           .replace('https://', 'wss://')
           .replace('http://', 'ws://')
       );
-      statusSocket.current.onopen = () => setServerStatus(1);
-      statusSocket.current.onclose = (e) => setServerStatus(-1);
-      statusSocket.current.onerror = (e) => setServerStatus(-1);
-    }
+      infoSocket.current.onopen = () => {
+        setServerStatus(1);
+        infoSocket.current.send(JSON.stringify(userData));
+      };
+      infoSocket.current.onmessage = (event:any) => {
+        eventEmitter.emit('RDFSGenericDataMessage', JSON.parse(event.data));
+      };
+      infoSocket.current.onclose = (event:any) => setServerStatus(-1);
+      infoSocket.current.onerror = (event:any) => setServerStatus(-1);
+    } else if (!userIsLoggedIn) {
+      setServerStatus(1);
+    };
 
-    // Updates screen, window & viewport variables when the screen or window size changes
+    const userDataInterval = setInterval(
+      () => {
+        if (infoSocket.current !== null && userIsLoggedIn) {
+          infoSocket.current.send(JSON.stringify(userData))
+        }
+      },
+      10000
+    );
+
     const subscription = Dimensions.addEventListener('change', ({window, screen}) => {
       setDimensions({
         window,
         view: {
           width: window.width,
-          height: Platform === 'ios' ? window.height - 72 : window.height - 52
+          height: Platform.OS === 'ios' ? window.height - 72 : window.height - 52
         },
         screen
       });
     });
 
-    return () => subscription?.remove();
+    return () => {
+      clearInterval(userDataInterval);
+      subscription?.remove();
+    }
   }, [ dimensions.window, dimensions.screen, userData ]);
 
   return <>

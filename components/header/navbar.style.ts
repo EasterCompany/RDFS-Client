@@ -1,11 +1,11 @@
 import { StyleSheet, Platform } from 'react-native';
 
 
-const header = StyleSheet.create({
+const header:any = StyleSheet.create({
 
   container: {
-    zIndex: '9999999999999',
-    verticalAlign: 'center',
+    zIndex: 999,
+    verticalAlign: 'middle',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
