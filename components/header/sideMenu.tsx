@@ -12,7 +12,10 @@ const SideMenu = ({view, children}:any) => {
     alignItems: 'center',
     bottom: 0,
     left: slideAnim,
-    width: Platform.OS === 'web' ? view.width * 0.5 : view.width,
+    width: Platform.OS === 'web' ?
+      view.width > 850 ? view.width * 0.5 : view.width
+    :
+      view.width,
     minWidth: 300,
     maxWidth: 640,
     height: view.height,
@@ -33,7 +36,7 @@ const SideMenu = ({view, children}:any) => {
     left: 0,
     width: view.width,
     height: view.height,
-    backgroundColor: 'rgba(0,0,0,.66)'
+    backgroundColor: 'rgba(0,0,0,.5)'
   }}>
     <Animated.View style={slideAnimationView}>
       {children}

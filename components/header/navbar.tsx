@@ -1,6 +1,5 @@
-// Library
-import {View, Platform, TextInput, Image, ViewStyle, ImageStyle, NativeEventEmitter} from 'react-native';
 // Assets
+import navbar from './navbar.style';
 import menuImg from '../../assets/images/menu.png';
 import userImg from '../../assets/images/user.png';
 import logoImg from '../../assets/images/rdfs.png';
@@ -12,8 +11,18 @@ import ImgBtn from '../../components/buttons/img';
 import TextBtn from '../../components/buttons/text';
 import LoginBtn from '../../components/buttons/login';
 import RegisterBtn from '../../components/buttons/register';
-// Styles
-import navbar from './navbar.style';
+// Library
+import {useState} from 'react';
+import {
+  View,
+  Platform,
+  TextInput,
+  Image,
+  ViewStyle,
+  ImageStyle,
+  NativeEventEmitter
+} from 'react-native';
+
 
 const eventEmitter = new NativeEventEmitter();
 
@@ -24,6 +33,12 @@ const uploadBtnPressed = () => {
 
 
 const Navbar = ({view, loggedIn, onPressLogin, onPressRegister, onPressUser, onPressNav, navMenuOpen}:any) => {
+  const [showSearchInput, setShowSearchInput] = useState<boolean>(view.width > 850);
+
+  if (view.width > 850 && !showSearchInput) setShowSearchInput(true);
+  const toggleShowSearchInput = () => {
+    if (view.width <= 850) setShowSearchInput(!showSearchInput);
+  }
 
   const navbarContainer:ViewStyle = {
     flex: 1,
@@ -60,13 +75,8 @@ const Navbar = ({view, loggedIn, onPressLogin, onPressRegister, onPressUser, onP
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 36,
+    marginLeft: 28,
     backgroundColor: '#20202966'
-  };
-
-  const searchInputIcon:ImageStyle = {
-    width: 24,
-    height: 24
   };
 
   const uploadBtn:ViewStyle = {
@@ -75,10 +85,10 @@ const Navbar = ({view, loggedIn, onPressLogin, onPressRegister, onPressUser, onP
     marginRight: 36
   };
 
-  const uploadBtn1:ViewStyle = {
+  const uploadBtnIcon:ViewStyle = {
     width: 36,
     height: 36,
-    marginRight: 36
+    marginRight: 28
   };
 
   const userBtnContainer:ViewStyle = {
@@ -101,9 +111,9 @@ const Navbar = ({view, loggedIn, onPressLogin, onPressRegister, onPressUser, onP
         onPress={onPressNav}
       />
       <View style={searchInputIconContainer}>
-        <Image source={searchSVG} resizeMode="contain" style={searchInputIcon}/>
+        <ImgBtn width={24} height={24} image={searchSVG} onPress={toggleShowSearchInput}/>
       </View>
-      <TextInput style={searchInput}/>
+      {showSearchInput && <TextInput style={searchInput}/>}
     </View>
     {view.width >= 850 && <ImgBtn
       width={34}
@@ -113,9 +123,14 @@ const Navbar = ({view, loggedIn, onPressLogin, onPressRegister, onPressUser, onP
     />}
     <View style={navbarContainerRight}>
       {
-        view.width >= 850 ?
-          <TextBtn text="Upload" style={uploadBtn} onPress={uploadBtnPressed}/> :
-          <ImgBtn width={34} height={34} image={uploadSVG} style={uploadBtn1}/>
+        view.width > 850 ?
+          <>
+            <TextBtn text="Upload" style={uploadBtn} onPress={uploadBtnPressed}/>
+          </>
+        :
+          <>
+            <ImgBtn width={34} height={34} image={uploadSVG} style={uploadBtnIcon} onPress={uploadBtnPressed}/>
+          </>
       }
       <ImgBtn
         width={34}

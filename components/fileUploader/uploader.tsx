@@ -8,7 +8,17 @@ import * as DocumentPicker from 'expo-document-picker';
 import fileSize from '../../library/fileSize';
 import fileIcon from '../../library/fileIcon';
 import {useState, useRef} from 'react';
-import {View, Text, Pressable, Image, ViewStyle, TextStyle, PressableStyle, ImageStyle} from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  ViewStyle,
+  TextStyle,
+  PressableStyle,
+  ImageStyle,
+  ActivityIndicator
+} from 'react-native';
 
 type Uploader = {
   view: {
@@ -19,13 +29,24 @@ type Uploader = {
 
 
 const Uploader = ({view}:Uploader) => {
-  const [selectedFiles, setSelectedFiles] = useState<Array>([]);
+  const [selectedFiles, setSelectedFiles] = useState<array>([]);
+  const [isUploading, setUploading] = useState<boolean>(false);
+
+  const uploadSelectedFiles = () => {
+    setUploading(true);
+  };
 
   const container:ViewStyle = {
     width: view.width,
     height: view.height,
     paddingLeft: 16,
     paddingRight: 16
+  };
+
+  const loadingContainer:ViewStyle = {
+    alignItems: 'center',
+    justifyContent: 'center',
+    verticalAlign: 'middle'
   };
 
   const h1:TextStyle = {
@@ -81,7 +102,7 @@ const Uploader = ({view}:Uploader) => {
 
   const uploadBtn:PressableStyle = {
     maxWidth: 200,
-    opacity: selectedFiles !== null ? 1 : 0.1
+    opacity: selectedFiles.length > 0 ? 1 : 0.1
   };
 
   const selectFilesToUpload = async () => {
@@ -92,6 +113,11 @@ const Uploader = ({view}:Uploader) => {
       alert("Sorry, there was a problem with one or more of the files you selected.");
     }
   };
+
+  if (isUploading) return <View style={loadingContainer}>
+    <ActivityIndicator animating={true} color="white" size="large"/>
+    <Text style={h2}>Uploading Files...</Text>
+  </View>
 
   return <View style={container}>
     <Text style={h1}>File Upload</Text>
@@ -112,7 +138,12 @@ const Uploader = ({view}:Uploader) => {
     </View>
     <View style={uploadBtnsSection}>
       <TextBtn text="Select Files" style={selectBtn} onPress={selectFilesToUpload}/>
-      <TextBtn text="Upload" style={uploadBtn} disabled={selectedFiles.length === 0}/>
+      <TextBtn
+        text="Upload"
+        style={uploadBtn}
+        disabled={selectedFiles.length === 0}
+        onPress={uploadSelectedFiles}
+      />
     </View>
   </View>;
 };
