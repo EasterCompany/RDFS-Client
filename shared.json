@@ -3,7 +3,8 @@
   "file": [
     "library/api.ts",
     "library/devTools.ts",
-    "library/strings.ts"
+    "library/strings.ts",
+    "/assets/icons/check.svg"
   ],
   "module": [
     "/assets/fonts/"

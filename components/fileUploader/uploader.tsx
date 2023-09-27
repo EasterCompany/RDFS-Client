@@ -1,5 +1,6 @@
 // Assets
-import closeIMG from '../../assets/images/close.png';
+import closePNG from '../../assets/images/close.png';
+import checkSVG from '../../assets/svgs/check.svg';
 // Components
 import TextBtn from '../buttons/text';
 import ImgBtn from '../buttons/img';
@@ -19,6 +20,7 @@ import {
   ImageStyle,
   ActivityIndicator
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type Uploader = {
   view: {
@@ -70,6 +72,7 @@ const Uploader = ({view}:Uploader) => {
   };
 
   const selectedFilesSection:ViewStyle = {
+    overflow: 'hidden',
     width: view.width - 32,
     maxWidth: 980,
     marginTop: view.height * 0.025,
@@ -102,7 +105,7 @@ const Uploader = ({view}:Uploader) => {
 
   const uploadBtn:PressableStyle = {
     maxWidth: 200,
-    opacity: selectedFiles.length > 0 ? 1 : 0.1
+    opacity: selectedFiles.length === 0 || isUploading ? 0.1 : 1
   };
 
   const selectFilesToUpload = async () => {
@@ -113,11 +116,6 @@ const Uploader = ({view}:Uploader) => {
       alert("Sorry, there was a problem with one or more of the files you selected.");
     }
   };
-
-  if (isUploading) return <View style={loadingContainer}>
-    <ActivityIndicator animating={true} color="white" size="large"/>
-    <Text style={h2}>Uploading Files...</Text>
-  </View>
 
   return <View style={container}>
     <Text style={h1}>File Upload</Text>
@@ -131,17 +129,18 @@ const Uploader = ({view}:Uploader) => {
             type={x.mimeType}
             size={x.size}
             last={idx+1 === selectedFiles.length}
+            uploadStatus={50}
             remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
           />
         })
       }
     </View>
     <View style={uploadBtnsSection}>
-      <TextBtn text="Select Files" style={selectBtn} onPress={selectFilesToUpload}/>
+      <TextBtn text={isUploading ? "Add More" : "Select Files"} style={selectBtn} onPress={selectFilesToUpload}/>
       <TextBtn
         text="Upload"
         style={uploadBtn}
-        disabled={selectedFiles.length === 0}
+        disabled={selectedFiles.length === 0 || isUploading}
         onPress={uploadSelectedFiles}
       />
     </View>
@@ -154,13 +153,22 @@ type StagedFile = {
   type: string,
   size: number,
   last: boolean,
+  uploadStatus: undefined|number,
   remove: () => void;
 };
 
 
-const StagedFile = ({name, type, size, last,  remove}:StagedFile) => {
+const StagedFile = ({name, type, size, last, uploadStatus, remove}:StagedFile) => {
 
-  const container:ViewStyle = {
+  const container:viewStyle = {
+    borderTop: 0,
+    borderLeft: 0,
+    borderRight: 0,
+    borderWidth: last ? 0 : 1,
+    borderColor: '#ffffff'
+  };
+
+  const fileContextContainer:ViewStyle = {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -170,11 +178,6 @@ const StagedFile = ({name, type, size, last,  remove}:StagedFile) => {
     paddingLeft: 8,
     paddingRight: 8,
     paddingBottom: 8,
-    borderTop: 0,
-    borderLeft: 0,
-    borderRight: 0,
-    borderWidth: last ? 0 : 1,
-    borderColor: '#ffffff'
   };
 
   const text:TextStyle = {
@@ -188,7 +191,7 @@ const StagedFile = ({name, type, size, last,  remove}:StagedFile) => {
 
   const textThin:TextStyle = {
     textAlign: 'center',
-    color: '#ffffff66',
+    color: '#ffffff99',
     fontSize: 18,
     fontFamily: 'Metro-Thin',
     marginTop: 'auto',
@@ -206,13 +209,37 @@ const StagedFile = ({name, type, size, last,  remove}:StagedFile) => {
     paddingLeft: 8
   };
 
+  const uploadProgressGradient = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: uploadStatus === undefined ? `0%` : `${uploadStatus}%`,
+    height: '100%'
+  };
+
   return <View style={container}>
-    <Image source={fileIcon(name, type)} style={fileIconStyle}/>
-    <View style={labelContainer}>
-      <Text style={text}>{name}</Text>
-      <Text style={textThin}>&nbsp;({fileSize(size)})</Text>
+    <LinearGradient style={uploadProgressGradient} colors={['rgba(20,200,20,0.9)', 'transparent']}/>
+    <View style={fileContextContainer}>
+      <Image source={fileIcon(name, type)} style={fileIconStyle}/>
+      <View style={labelContainer}>
+        <Text style={text}>{name}</Text>
+        <Text style={textThin}>&nbsp;({
+          uploadStatus === undefined || uploadStatus === 100?
+            fileSize(size)
+          :
+            `${fileSize(size * (uploadStatus / 100))} / ${fileSize(size)}`
+        })</Text>
+      </View>
+      {
+        uploadStatus === undefined ?
+          <ImgBtn onPress={remove} image={closePNG} width={24} height={24}/>
+        :
+          uploadStatus === 100 ?
+            <ImgBtn image={checkSVG} width={24} height={24}/>
+          :
+            <ActivityIndicator color="#ffffff" animating/>
+      }
     </View>
-    <ImgBtn onPress={remove} image={closeIMG} width={24} height={24}/>
   </View>
 };
 
