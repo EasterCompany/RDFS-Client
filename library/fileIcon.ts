@@ -77,31 +77,31 @@ const svgIcons = {
   "application/pdf": pdfSVG,
   "application/ogg": fileSVG,
   "application/x-sh": shSVG,
-  "application/x-cdf": audioSVG,
   "application/json": jsonSVG,
-  "application/ld+json": jsonldSVG,
   "application/gzip": zipSVG,
-  "application/msword": wordSVG,
+  "application/x-cdf": audioSVG,
   "application/x-csh": shSVG,
   "application/x-tar": zipSVG,
   "application/x-bzip": zipSVG,
+  "application/msword": wordSVG,
   "application/x-bzip2": zipSVG,
   "application/vnd.rar": zipSVG,
+  "application/ld+json": jsonldSVG,
+  "application/atom+xml": xmlSVG,
   "application/epub+zip": bookSVG,
+  "application/vnd.visio": fileSVG,
+  "application/xhtml+xml": htmlSVG,
   "application/x-httpd-php": phpSVG,
   "application/vnd.sqlite3": dbSVG,
+  "application/vnd.ms-excel": excelSVG,
   "application/x-javascript": jsSVG,
   "application/octet-stream": binarySVG,
   "application/java-archive": javaSVG,
-  "application/vnd.visio": fileSVG,
-  "application/xhtml+xml": htmlSVG,
-  "application/atom+xml": xmlSVG,
   "application/x-7z-compressed": zipSVG,
   "application/vnd.amazon.ebook": bookSVG,
-  "application/vnd.ms-excel": excelSVG,
-  "application/vnd.mozilla.xul+xml": fileSVG,
   "application/vnd.ms-fontobject": fontSVG,
   "application/vnd.ms-powerpoint": powerpointSVG,
+  "application/vnd.mozilla.xul+xml": fileSVG,
   "application/vnd.apple.installer+xml": appleSVG,
   "application/vnd.oasis.opendocument.text": fileSVG,
   "application/vnd.oasis.opendocument.spreadsheet": excelSVG,
@@ -111,7 +111,7 @@ const svgIcons = {
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": powerpointSVG,
 };
 
-const fileIcon = (name, mimeType) => {
+const fileIcon = (name:string|undefined, mimeType:string|undefined) => {
   const fileExtRegex = /(?:\.([^.]+))?$/;
   const svgMimeTypeIcon = svgIcons[`${mimeType}`];
   const svgFileTypeIcon = name.includes('.') ? svgIcons[`.${fileExtRegex.exec(name)[1]}`] : undefined;
