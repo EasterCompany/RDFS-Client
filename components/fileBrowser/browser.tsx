@@ -13,7 +13,6 @@ const Browser = ({view}:any) => {
 
   if (!eventHandlersAdded.current) {
     eventEmitter.addListener('RDFSGenericDataMessage', (event:any) => {
-      console.log(event);
       setUserFiles(event['userFiles']);
     });
     eventHandlersAdded.current = true;

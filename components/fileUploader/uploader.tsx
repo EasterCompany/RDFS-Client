@@ -1,11 +1,12 @@
 // Assets
-import fileSVG from '../../assets/svgs/file.svg';
 import closeIMG from '../../assets/images/close.png';
 // Components
 import TextBtn from '../buttons/text';
 import ImgBtn from '../buttons/img';
 import * as DocumentPicker from 'expo-document-picker';
 // Library
+import fileSize from '../../library/fileSize';
+import fileIcon from '../../library/fileIcon';
 import {useState, useRef} from 'react';
 import {View, Text, Pressable, Image, ViewStyle, TextStyle, PressableStyle, ImageStyle} from 'react-native';
 
@@ -84,8 +85,12 @@ const Uploader = ({view}:Uploader) => {
   };
 
   const selectFilesToUpload = async () => {
-    const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: false});
-    setSelectedFiles(selectedFiles.concat(picker.assets));
+    try {
+      const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: true});
+      setSelectedFiles(selectedFiles.concat(picker.assets));
+    } catch (error) {
+      alert("Sorry, there was a problem with one or more of the files you selected.");
+    }
   };
 
   return <View style={container}>
@@ -94,7 +99,14 @@ const Uploader = ({view}:Uploader) => {
       {
         selectedFiles.length === 0 ? <Text style={h2}>No files selected...</Text> :
         selectedFiles.map((x:any, idx:any) => {
-          return <StagedFile key={idx} name={x.name} type={x.type} size={x.size}/>
+          return <StagedFile
+            key={idx}
+            name={x.name}
+            type={x.mimeType}
+            size={x.size}
+            last={idx+1 === selectedFiles.length}
+            remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
+          />
         })
       }
     </View>
@@ -107,13 +119,15 @@ const Uploader = ({view}:Uploader) => {
 
 
 type StagedFile = {
-  name: String,
-  type: String,
-  size: Number
+  name: string,
+  type: string,
+  size: number,
+  last: boolean,
+  remove: () => void;
 };
 
 
-const StagedFile = ({name, type, size}:StagedFile) => {
+const StagedFile = ({name, type, size, last,  remove}:StagedFile) => {
 
   const container:ViewStyle = {
     flex: 1,
@@ -128,7 +142,7 @@ const StagedFile = ({name, type, size}:StagedFile) => {
     borderTop: 0,
     borderLeft: 0,
     borderRight: 0,
-    borderWidth: 1,
+    borderWidth: last ? 0 : 1,
     borderColor: '#ffffff'
   };
 
@@ -150,7 +164,7 @@ const StagedFile = ({name, type, size}:StagedFile) => {
     marginBottom: 'auto'
   };
 
-  const fileIcon:ImageStyle = {
+  const fileIconStyle:ImageStyle = {
     width: 32,
     height: 32
   };
@@ -162,12 +176,12 @@ const StagedFile = ({name, type, size}:StagedFile) => {
   };
 
   return <View style={container}>
-    <Image source={fileSVG} style={fileIcon}/>
+    <Image source={fileIcon(name, type)} style={fileIconStyle}/>
     <View style={labelContainer}>
       <Text style={text}>{name}</Text>
-      <Text style={textThin}>&nbsp;({size}B)</Text>
+      <Text style={textThin}>&nbsp;({fileSize(size)})</Text>
     </View>
-    <ImgBtn onPress={() => {}} image={closeIMG} width={24} height={24}/>
+    <ImgBtn onPress={remove} image={closeIMG} width={24} height={24}/>
   </View>
 };
 

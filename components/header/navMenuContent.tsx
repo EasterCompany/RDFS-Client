@@ -16,12 +16,12 @@ const NavMenuContent = () => {
   return <>
     <Header text="Directories"/>
     <Option text="All Files" onPress={() => setView('browser')}/>
-    <Option text="Pictures" onPress={() => setView('browser')}/>
-    <Option text="Videos" onPress={() => setView('browser')}/>
-    <Option text="Audio" onPress={() => setView('browser')}/>
-    <Option text="Games" onPress={() => setView('browser')}/>
-    <Option text="TV & Movies" onPress={() => setView('browser')}/>
-    <Option text="Documents" onPress={() => setView('browser')} last/>
+    <Option text="Pictures" onPress={() => setView('browser:pictures')}/>
+    <Option text="Videos" onPress={() => setView('browser:videos')}/>
+    <Option text="Audio" onPress={() => setView('browser:audio')}/>
+    <Option text="Games" onPress={() => setView('browser:games')}/>
+    <Option text="TV & Movies" onPress={() => setView('browser:tv&movies')}/>
+    <Option text="Documents" onPress={() => setView('browser:documents')} last/>
   </>;
 };
 
