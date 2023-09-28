@@ -34,6 +34,8 @@ const Uploader = ({view}:Uploader) => {
   const [selectedFiles, setSelectedFiles] = useState<array>([]);
   const [isUploading, setUploading] = useState<boolean>(false);
 
+  if (selectedFiles.length === 0 && isUploading) setUploading(false);
+
   const uploadSelectedFiles = () => {
     setUploading(true);
   };
@@ -113,6 +115,7 @@ const Uploader = ({view}:Uploader) => {
       const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: true});
       setSelectedFiles(selectedFiles.concat(picker.assets));
     } catch (error) {
+      console.log(error);
       alert("Sorry, there was a problem with one or more of the files you selected.");
     }
   };
@@ -129,7 +132,7 @@ const Uploader = ({view}:Uploader) => {
             type={x.mimeType}
             size={x.size}
             last={idx+1 === selectedFiles.length}
-            uploadStatus={50}
+            uploadStatus={x.uploadStatus}
             remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
           />
         })

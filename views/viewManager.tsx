@@ -20,7 +20,6 @@ const ViewManager = ({view}:any) => {
 
   const scroll:ViewStyle = {
     width: view.width,
-    height: view.height,
     backgroundColor: '#202029'
   };
 
@@ -29,7 +28,7 @@ const ViewManager = ({view}:any) => {
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    width: view.width
+    width: view.width,
   };
 
   return <ScrollView
