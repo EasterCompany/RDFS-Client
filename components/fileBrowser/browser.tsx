@@ -18,9 +18,7 @@ const Browser = ({view}:any) => {
     eventHandlersAdded.current = true;
   };
 
-  return <>{
-    userFiles.map((file:any) => <File size={fileSize}/>)
-  }</>
+  return <>{userFiles.map((file:any) => <File data={file} size={fileSize}/>)}</>
 };
 
 

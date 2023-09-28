@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { Pressable } from 'react-native';
+// Library
+import {useState} from 'react';
+import {Text, Pressable} from 'react-native';
+import fileSize from '../../library/fileSize';
+import fileIcon from '../../library/fileIcon';
 
 
-const File = ({size}:any) => {
+const File = ({data, size}:any) => {
   const [ isHover, setHover ] = useState(false);
   const [ isPress, setPress ] = useState(false);
 
@@ -30,6 +33,8 @@ const File = ({size}:any) => {
     onPressIn={() => setPress(true)}
     onPressOut={() => setPress(false)}
   >
+    <Text>{data.alias}</Text>
+    <Text>{fileSize(data.size)}</Text>
   </Pressable>
 };
 

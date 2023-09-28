@@ -20,6 +20,7 @@ const ViewManager = ({view}:any) => {
 
   const scroll:ViewStyle = {
     width: view.width,
+    height: view.height,
     backgroundColor: '#202029'
   };
 

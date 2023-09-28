@@ -20,7 +20,8 @@ import {
   ImageStyle,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
+import {serverAdr, USER} from '../../shared/library/api';
 
 type Uploader = {
   view: {
@@ -33,12 +34,40 @@ type Uploader = {
 const Uploader = ({view}:Uploader) => {
   const [selectedFiles, setSelectedFiles] = useState<array>([]);
   const [isUploading, setUploading] = useState<boolean>(false);
+  const fileToUpload = useRef<number>(0);
+
+  const uploadNextFile = async () => {
+    const user = await USER();
+
+    const formData = new FormData();
+    formData.append('file', selectedFiles[fileToUpload.current].file, selectedFiles[fileToUpload.current].file.name);
+
+    const req = new XMLHttpRequest();
+    req.upload.addEventListener("progress", (event) => {
+      const uploadPercentage = Math.round((event.loaded / event.total) * 100);
+      setSelectedFiles(c => {
+        c[fileToUpload.current].uploadStatus = uploadPercentage;
+        if (uploadPercentage === 100) fileToUpload.current++;
+        return [ ...c ];
+      });
+    });
+
+    //req.addEventListener("load", completeHandler, false);
+    //req.addEventListener("error", errorHandler, false);
+    //req.addEventListener("abort", abortHandler, false);
+    req.open('POST', `${serverAdr}api/rdfs/upload`);
+    req.setRequestHeader('Authorization',`Basic ${user.uuid} ${user.session}`);
+    req.send(formData);
+  };
 
   if (selectedFiles.length === 0 && isUploading) setUploading(false);
-
-  const uploadSelectedFiles = () => {
-    setUploading(true);
-  };
+  else if (isUploading && selectedFiles.length === fileToUpload.current) setUploading(false);
+  else if (
+    selectedFiles.length > 0 &&
+    isUploading &&
+    selectedFiles.length > fileToUpload.current &&
+    selectedFiles[fileToUpload.current].uploadStatus === undefined
+  ) uploadNextFile();
 
   const container:ViewStyle = {
     width: view.width,
@@ -144,7 +173,7 @@ const Uploader = ({view}:Uploader) => {
         text="Upload"
         style={uploadBtn}
         disabled={selectedFiles.length === 0 || isUploading}
-        onPress={uploadSelectedFiles}
+        onPress={() => setUploading(true)}
       />
     </View>
   </View>;
