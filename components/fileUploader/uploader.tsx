@@ -47,15 +47,20 @@ const Uploader = ({view}:Uploader) => {
       const uploadPercentage = Math.round((event.loaded / event.total) * 100);
       setSelectedFiles(c => {
         c[fileToUpload.current].uploadStatus = uploadPercentage;
-        if (uploadPercentage === 100) fileToUpload.current++;
         return [ ...c ];
       });
     });
+    req.addEventListener("load", (event) => {
+      setSelectedFiles(c => {
+        c[fileToUpload.current].compressedSize = fileSize(JSON.parse(event.target.response).data.compressedSize);
+        fileToUpload.current++;
+        return [ ...c ];
+      })
+    });
 
-    //req.addEventListener("load", completeHandler, false);
     //req.addEventListener("error", errorHandler, false);
     //req.addEventListener("abort", abortHandler, false);
-    req.open('POST', `${serverAdr}api/rdfs/upload`);
+    req.open('POST', `${serverAdr}api/rdfs/upload?mimeType=${selectedFiles[fileToUpload.current].mimeType}`);
     req.setRequestHeader('Authorization',`Basic ${user.uuid} ${user.session}`);
     req.send(formData);
   };
@@ -160,6 +165,7 @@ const Uploader = ({view}:Uploader) => {
             name={x.name}
             type={x.mimeType}
             size={x.size}
+            compressedSize={x.compressedSize}
             last={idx+1 === selectedFiles.length}
             uploadStatus={x.uploadStatus}
             remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
@@ -184,13 +190,14 @@ type StagedFile = {
   name: string,
   type: string,
   size: number,
+  compressedSize: undefined|number,
   last: boolean,
   uploadStatus: undefined|number,
   remove: () => void;
 };
 
 
-const StagedFile = ({name, type, size, last, uploadStatus, remove}:StagedFile) => {
+const StagedFile = ({name, type, size, compressedSize, last, uploadStatus, remove}:StagedFile) => {
 
   const container:viewStyle = {
     borderTop: 0,
@@ -221,12 +228,24 @@ const StagedFile = ({name, type, size, last, uploadStatus, remove}:StagedFile) =
     marginBottom: 'auto'
   };
 
-  const textThin:TextStyle = {
+  const fileSizeText:TextStyle = {
+    textAlign: 'center',
+    color: '#ffffff99',
+    fontSize: 18,
+    fontFamily: 'Metro-Thin',
+    textDecorationLine: compressedSize === undefined ? '' : 'line-through',
+    marginTop: 'auto',
+    marginLeft: 16,
+    marginBottom: 'auto'
+  };
+
+  const compressedSizeText:TextStyle = {
     textAlign: 'center',
     color: '#ffffff99',
     fontSize: 18,
     fontFamily: 'Metro-Thin',
     marginTop: 'auto',
+    marginLeft: 6,
     marginBottom: 'auto'
   };
 
@@ -254,13 +273,18 @@ const StagedFile = ({name, type, size, last, uploadStatus, remove}:StagedFile) =
     <View style={fileContextContainer}>
       <Image source={fileIcon(name, type)} style={fileIconStyle}/>
       <View style={labelContainer}>
-        <Text style={text}>{name}</Text>
-        <Text style={textThin}>&nbsp;({
-          uploadStatus === undefined || uploadStatus === 100?
+        <Text style={text}>{name.substring(0, 16)}{name.length > 16 ? '...' : ''}</Text>
+        <Text style={fileSizeText}>{
+          uploadStatus === undefined || uploadStatus === 100 ?
             fileSize(size)
           :
-            `${fileSize(size * (uploadStatus / 100))} / ${fileSize(size)}`
-        })</Text>
+            `(${fileSize(size * (uploadStatus / 100))} / ${fileSize(size)})`
+        }</Text>{
+          compressedSize === undefined ?
+            <></>
+          :
+            <Text style={compressedSizeText}>{compressedSize}</Text>
+        }
       </View>
       {
         uploadStatus === undefined ?
