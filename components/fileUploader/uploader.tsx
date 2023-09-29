@@ -1,25 +1,27 @@
 // Assets
-import closePNG from '../../assets/images/close.png';
 import checkSVG from '../../assets/svgs/check.svg';
+import closePNG from '../../assets/images/close.png';
 // Components
-import TextBtn from '../buttons/text';
 import ImgBtn from '../buttons/img';
+import TextBtn from '../buttons/text';
+import BottomToolbar from '../footer/bottomToolbar';
 import * as DocumentPicker from 'expo-document-picker';
 // Library
-import fileSize from '../../library/fileSize';
-import fileIcon from '../../library/fileIcon';
 import {useState, useRef} from 'react';
 import {
   View,
   Text,
   Pressable,
   Image,
+  ScrollView,
   ViewStyle,
   TextStyle,
   PressableStyle,
   ImageStyle,
   ActivityIndicator
 } from 'react-native';
+import fileSize from '../../library/fileSize';
+import fileIcon from '../../library/fileIcon';
 import {LinearGradient} from 'expo-linear-gradient';
 import {serverAdr, USER} from '../../shared/library/api';
 
@@ -74,9 +76,23 @@ const Uploader = ({view}:Uploader) => {
     selectedFiles[fileToUpload.current].uploadStatus === undefined
   ) uploadNextFile();
 
+  const scroll:ViewStyle = {
+    width: view.width,
+    height: view.height * 0.98 - 42,
+    backgroundColor: '#202029'
+  };
+
+  const scrollContainer:ViewStyle = {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: view.width,
+    paddingVertical: 20
+  };
+
   const container:ViewStyle = {
     width: view.width,
-    height: view.height,
     paddingLeft: 16,
     paddingRight: 16
   };
@@ -120,27 +136,15 @@ const Uploader = ({view}:Uploader) => {
     borderRadius: 6,
   };
 
-  const uploadBtnsSection:ViewStyle = {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: view.width - 32,
-    maxHeight: 48,
-    maxWidth: 980,
-    marginTop: 0,
-    marginLeft: 'auto',
-    marginRight: 'auto'
-  };
-
   const selectBtn:PressableStyle = {
     maxWidth: 200,
+    height: 42,
     backgroundColor: 'transparent'
   };
 
   const uploadBtn:PressableStyle = {
     maxWidth: 200,
+    height: 42,
     opacity: selectedFiles.length === 0 || isUploading ? 0.1 : 1
   };
 
@@ -149,31 +153,37 @@ const Uploader = ({view}:Uploader) => {
       const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: true});
       setSelectedFiles(selectedFiles.concat(picker.assets));
     } catch (error) {
-      console.log(error);
       alert("Sorry, there was a problem with one or more of the files you selected.");
     }
   };
 
-  return <View style={container}>
-    <Text style={h1}>File Upload</Text>
-    <View style={selectedFilesSection}>
-      {
-        selectedFiles.length === 0 ? <Text style={h2}>No files selected...</Text> :
-        selectedFiles.map((x:any, idx:any) => {
-          return <StagedFile
-            key={idx}
-            name={x.name}
-            type={x.mimeType}
-            size={x.size}
-            compressedSize={x.compressedSize}
-            last={idx+1 === selectedFiles.length}
-            uploadStatus={x.uploadStatus}
-            remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
-          />
-        })
-      }
-    </View>
-    <View style={uploadBtnsSection}>
+  return <>
+    <ScrollView
+      style={scroll}
+      contentContainerStyle={scrollContainer}
+    >
+      <View style={container}>
+        <Text style={h1}>File Upload</Text>
+        <View style={selectedFilesSection}>
+          {
+            selectedFiles.length === 0 ? <Text style={h2}>No files selected...</Text> :
+            selectedFiles.map((x:any, idx:any) => {
+              return <StagedFile
+                key={idx}
+                name={x.name}
+                type={x.mimeType}
+                size={x.size}
+                compressedSize={x.compressedSize}
+                last={idx+1 === selectedFiles.length}
+                uploadStatus={x.uploadStatus}
+                remove={() => setSelectedFiles(selectedFiles.filter((x, i) => i !== idx))}
+              />
+            })
+          }
+        </View>
+      </View>
+    </ScrollView>
+    <BottomToolbar view={view}>
       <TextBtn text={isUploading ? "Add More" : "Select Files"} style={selectBtn} onPress={selectFilesToUpload}/>
       <TextBtn
         text="Upload"
@@ -181,8 +191,8 @@ const Uploader = ({view}:Uploader) => {
         disabled={selectedFiles.length === 0 || isUploading}
         onPress={() => setUploading(true)}
       />
-    </View>
-  </View>;
+    </BottomToolbar>
+  </>
 };
 
 
@@ -268,18 +278,36 @@ const StagedFile = ({name, type, size, compressedSize, last, uploadStatus, remov
     height: '100%'
   };
 
+  const uploadProgressText = {
+    textAlign: 'center',
+    color: '#fffffff9',
+    fontSize: 18,
+    fontFamily: 'Metro-Thin',
+    marginTop: 'auto',
+    marginRight: 8,
+    marginBottom: 'auto'
+  };
+
   return <View style={container}>
-    <LinearGradient style={uploadProgressGradient} colors={['rgba(20,200,20,0.9)', 'transparent']}/>
+    <LinearGradient style={uploadProgressGradient} colors={
+      [
+        (compressedSize === undefined && uploadStatus === 100) ? 'rgba(20,20,200,0.9)' : 'rgba(20,200,20,0.9)',
+        'transparent'
+      ]
+    }/>
     <View style={fileContextContainer}>
       <Image source={fileIcon(name, type)} style={fileIconStyle}/>
       <View style={labelContainer}>
         <Text style={text}>{name.substring(0, 16)}{name.length > 16 ? '...' : ''}</Text>
-        <Text style={fileSizeText}>{
+        <Text style={fileSizeText}>
+        {
           uploadStatus === undefined || uploadStatus === 100 ?
             fileSize(size)
           :
             `(${fileSize(size * (uploadStatus / 100))} / ${fileSize(size)})`
-        }</Text>{
+        }
+        </Text>
+        {
           compressedSize === undefined ?
             <></>
           :
@@ -290,10 +318,17 @@ const StagedFile = ({name, type, size, compressedSize, last, uploadStatus, remov
         uploadStatus === undefined ?
           <ImgBtn onPress={remove} image={closePNG} width={24} height={24}/>
         :
-          uploadStatus === 100 ?
-            <ImgBtn image={checkSVG} width={24} height={24}/>
+        uploadStatus === 100 && compressedSize !== undefined ?
+          <ImgBtn image={checkSVG} width={24} height={24}/>
+        :
+        <>
+          {uploadStatus === 100 ?
+            <Text style={uploadProgressText}>Compressing...</Text>
           :
-            <ActivityIndicator color="#ffffff" animating/>
+            <Text style={uploadProgressText}>{uploadStatus}%</Text>
+          }
+          <ActivityIndicator color="#ffffff" animating/>
+        </>
       }
     </View>
   </View>

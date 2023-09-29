@@ -18,7 +18,25 @@ const Browser = ({view}:any) => {
     eventHandlersAdded.current = true;
   };
 
-  return <>{userFiles.map((file:any) => <File data={file} size={fileSize}/>)}</>
+  const scroll:ViewStyle = {
+    width: view.width,
+    height: view.height,
+    backgroundColor: '#202029'
+  };
+
+  const scrollContainer:ViewStyle = {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: view.width,
+    height: view.height
+  };
+
+  return <ScrollView
+    style={scroll}
+    contentContainerStyle={scrollContainer}
+  >{userFiles.map((file:any, idx:any) => <File key={idx} data={file} size={fileSize}/>)}</ScrollView>;
 };
 
 

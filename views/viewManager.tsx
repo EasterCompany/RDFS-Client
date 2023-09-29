@@ -18,28 +18,9 @@ const ViewManager = ({view}:any) => {
     eventHandlersAdded.current = true;
   }
 
-  const scroll:ViewStyle = {
-    width: view.width,
-    height: view.height,
-    backgroundColor: '#202029'
-  };
-
-  const container:ViewStyle = {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: view.width,
-  };
-
-  return <ScrollView
-    style={scroll}
-    contentContainerStyle={container}
-  >{
-    currentView === 'browser' ? <Browser view={view}/> :
-    currentView === 'uploader' ? <Uploader view={view}/> :
-    <></>
-  }</ScrollView>
+  return currentView === 'browser' ? <Browser view={view}/> :
+  currentView === 'uploader' ? <Uploader view={view}/> :
+  <></>
 };
 
 
