@@ -33,7 +33,7 @@ const File = ({data, size}:any) => {
     onPressIn={() => setPress(true)}
     onPressOut={() => setPress(false)}
   >
-    <Text>{data.alias}</Text>
+    <Text>{data.name}{data.ext}</Text>
     <Text>{fileSize(data.size)}</Text>
   </Pressable>
 };

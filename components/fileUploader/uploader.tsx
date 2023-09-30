@@ -36,6 +36,9 @@ type Uploader = {
 const Uploader = ({view}:Uploader) => {
   const [selectedFiles, setSelectedFiles] = useState<array>([]);
   const [isUploading, setUploading] = useState<boolean>(false);
+  const [totalUploadSize, setTotalUploadSize] = useState<number>(0);
+  const [totalCompressedSize, setTotalCompressedSize] = useState<number>(0);
+  const [totalSavedPercentage, setTotalSavedPercentage] = useState<number>(0);
   const fileToUpload = useRef<number>(0);
 
   const uploadNextFile = async () => {
@@ -53,8 +56,14 @@ const Uploader = ({view}:Uploader) => {
       });
     });
     req.addEventListener("load", (event) => {
+      const resp = JSON.parse(event.target.response);
+      setTotalUploadSize(totalUploadSize + resp.data.uploadSize);
+      setTotalCompressedSize(totalCompressedSize + resp.data.compressedSize);
+      if (totalUploadSize > 0 && totalCompressedSize > 0) setTotalSavedPercentage(
+        ((totalUploadSize - totalCompressedSize) / totalUploadSize) * 100
+      );
       setSelectedFiles(c => {
-        c[fileToUpload.current].compressedSize = fileSize(JSON.parse(event.target.response).data.compressedSize);
+        c[fileToUpload.current].compressedSize = fileSize(resp.data.compressedSize);
         fileToUpload.current++;
         return [ ...c ];
       })
@@ -148,9 +157,32 @@ const Uploader = ({view}:Uploader) => {
     opacity: selectedFiles.length === 0 || isUploading ? 0.1 : 1
   };
 
+  const bottomBarButtonContainer:ViewStyle = {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    verticalAlign: 'middle',
+    justifyContent: 'space-evenly'
+  }
+
+  const bottomBarFileSizeText:TextStyle = {
+    color: '#ffffff',
+    fontSize: 16,
+    fontFamily: 'Metro-Thin'
+  };
+
+  const savedPercentage:TextStyle = {
+    color: totalSavedPercentage > 1 ? 'rgb(20,200,20)' :
+      totalSavedPercentage < 0 ? 'rgb(200,20,20)' :
+      'rgb(200,200,200)',
+    fontSize: 16,
+    fontFamily: 'Metro-Thin',
+    marginLeft: 12
+  };
+
   const selectFilesToUpload = async () => {
     try {
-      const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: true});
+      const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: false});
       setSelectedFiles(selectedFiles.concat(picker.assets));
     } catch (error) {
       alert("Sorry, there was a problem with one or more of the files you selected.");
@@ -184,13 +216,28 @@ const Uploader = ({view}:Uploader) => {
       </View>
     </ScrollView>
     <BottomToolbar view={view}>
-      <TextBtn text={isUploading ? "Add More" : "Select Files"} style={selectBtn} onPress={selectFilesToUpload}/>
-      <TextBtn
-        text="Upload"
-        style={uploadBtn}
-        disabled={selectedFiles.length === 0 || isUploading}
-        onPress={() => setUploading(true)}
-      />
+      <View style={bottomBarButtonContainer}>
+        <TextBtn
+          text={isUploading ? "Add More" : "Select Files"}
+          style={selectBtn}
+          onPress={selectFilesToUpload}
+        />
+        <Text style={bottomBarFileSizeText}>
+          Uploaded: {fileSize(totalUploadSize)}
+        </Text>
+      </View>
+      <View style={bottomBarButtonContainer}>
+        <Text style={bottomBarFileSizeText}>
+          Saved: {fileSize(totalUploadSize - totalCompressedSize)}
+          <Text style={savedPercentage}>({Math.ceil(totalSavedPercentage)}%)</Text>
+        </Text>
+        <TextBtn
+          text="Upload"
+          style={uploadBtn}
+          disabled={selectedFiles.length === 0 || isUploading}
+          onPress={() => setUploading(true)}
+        />
+      </View>
     </BottomToolbar>
   </>
 };
