@@ -36,7 +36,9 @@ const Browser = ({view}:any) => {
   return <ScrollView
     style={scroll}
     contentContainerStyle={scrollContainer}
-  >{userFiles.map((file:any, idx:any) => <File key={idx} data={file} size={fileSize}/>)}</ScrollView>;
+  >
+    {userFiles.map((file:any, idx:any) => <File key={idx} file={file} size={fileSize}/>)}
+  </ScrollView>;
 };
 
 
