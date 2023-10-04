@@ -4,22 +4,22 @@ import {
   View,
   ScrollView,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Platform
 } from 'react-native';
 
 
 const NoUser = ({view}:any) => {
 
-  const scroll:ViewStyle = {
-    minWidth: view.width,
-    minHeight: view.height,
+  const scroll = {
+    width: view.width,
+    height: view.height,
+    backgroundColor: '#202029'
   };
 
-  const container:ViewStyle = {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingBottom: '5%'
+  const scrollContainer = {
+    width: view.width,
+    minHeight: view.height
   };
 
   const header:ViewStyle = {
@@ -73,10 +73,7 @@ const NoUser = ({view}:any) => {
     fontFamily: 'Metro-Thin'
   };
 
-  return <ScrollView
-    style={scroll}
-    contentContainerStyle={container}
-  >
+  return <ScrollView style={scroll} contentContainerStyle={scrollContainer}>
     <View style={header}>
       <Text style={h1}>RDFS</Text>
       <Text style={h2}>Rapid Directory & File System</Text>

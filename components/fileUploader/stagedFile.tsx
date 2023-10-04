@@ -64,7 +64,7 @@ const StagedFile = ({name, type, size, compressedSize, last, uploadStatus, remov
     color: '#ffffff99',
     fontSize: 18,
     fontFamily: 'Metro-Thin',
-    textDecorationLine: compressedSize === undefined ? '' : 'line-through',
+    textDecorationLine: compressedSize === undefined ? 'none' : 'line-through',
     marginTop: 'auto',
     marginLeft: 16,
     marginBottom: 'auto'

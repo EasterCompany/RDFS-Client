@@ -9,7 +9,12 @@ const Browser = ({view}:any) => {
   const [userFiles, setUserFiles] = useState<any>([]);
   const eventHandlersAdded = useRef<bool>(false);
   const eventEmitter = new NativeEventEmitter();
-  const fileSize = view.width / 8.88;
+  const horizontalMargin = view.width * 0.005;
+  const boxSize =
+    (view.width > 1900 ? (view.width - 8) / 10 :
+    view.width > 1200 ? (view.width - 8) / 8 :
+    view.width > 600 ? (view.width - 8) / 4 :
+    view.width / 2) - (horizontalMargin * 2)
 
   if (!eventHandlersAdded.current) {
     eventEmitter.addListener('RDFSGenericDataMessage', (event:any) => {
@@ -25,19 +30,23 @@ const Browser = ({view}:any) => {
   };
 
   const scrollContainer:ViewStyle = {
-    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'flex-start',
     width: view.width,
-    height: view.height
+    minHeight: view.height
   };
 
   return <ScrollView
     style={scroll}
     contentContainerStyle={scrollContainer}
   >
-    {userFiles.map((file:any, idx:any) => <File key={idx} file={file} size={fileSize}/>)}
+    {userFiles.map((file:any, idx:any) => <File
+      key={idx}
+      file={file}
+      boxSize={boxSize}
+      horizontalMargin={horizontalMargin}
+    />)}
   </ScrollView>;
 };
 

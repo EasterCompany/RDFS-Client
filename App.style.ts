@@ -102,7 +102,7 @@ const theme:any = StyleSheet.create({
     color: '#ffff',
     textAlign: 'center',
     fontWeight: 'normal',
-    marginTop: 32,
+    marginTop: 0,
     marginBottom: 16,
     fontSize: 28,
     fontFamily: 'Metro'
@@ -112,7 +112,7 @@ const theme:any = StyleSheet.create({
     color: '#ffff',
     textAlign: 'center',
     fontWeight: 'bold',
-    marginTop: 32,
+    marginTop: 0,
     marginBottom: 16,
     fontSize: 28,
     fontFamily: 'Metro-Bold'

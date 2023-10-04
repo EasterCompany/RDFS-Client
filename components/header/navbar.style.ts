@@ -14,6 +14,13 @@ const header:any = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 32 : 0,
     paddingLeft: 24,
     paddingRight: 24,
+    borderWidth: 1,
+    borderColor: '#ffffff33',
+    borderWidth: Platform.OS === 'web' ? 0 : 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    boxShadow: '1px 1px 5px #00000066',
     backgroundColor: '#202029'
   },
 

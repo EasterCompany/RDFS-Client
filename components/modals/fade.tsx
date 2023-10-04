@@ -17,8 +17,26 @@ import theme from '../../App.style';
 
 
 const FadeModal = ({title, visible, style, onClose, children}:any) => {
-  const screen = Dimensions.get('screen');
   const window = Dimensions.get('window');
+
+  const scrollContainer = {
+    width: '100%',
+    height: window.height - 52
+  };
+
+  const contentContainer = [
+    theme.modalContent,
+    {
+      overflowX: 'hidden',
+      height: Platform.OS === 'web' ? '100%' : undefined,
+      minHeight:
+        Platform.OS === 'ios' ? window.height - 86 :
+        Platform.OS === 'android' ? window.height - 52 :
+        '100%'
+    },
+    style
+  ];
+
   return <Modal
     animationType="fade"
     transparent={true}
@@ -29,10 +47,10 @@ const FadeModal = ({title, visible, style, onClose, children}:any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{
         top:
-          Platform.OS === 'web' ? screen.height * 0.1 :
+          Platform.OS === 'web' ? window.height * 0.125 :
           Platform.OS === 'ios' ? 34 : 0,
         height:
-          Platform.OS === 'web' ? '75%' : '100%'
+          Platform.OS === 'web' ? '75%' : window.height
       }}
     >
       <View style={theme.modalHeader}>
@@ -47,20 +65,8 @@ const FadeModal = ({title, visible, style, onClose, children}:any) => {
         />
       </View>
       <ScrollView
-        style={{
-          width: '100%',
-        }}
-        contentContainerStyle={[
-          theme.modalContent,
-          {
-            height: Platform.OS === 'web' ? '100%' : undefined,
-            minHeight:
-              Platform.OS === 'ios' ? window.height - 86 :
-              Platform.OS === 'android' ? window.height - 72 :
-              '100%'
-          },
-          style
-        ]}
+        style={scrollContainer}
+        contentContainerStyle={contentContainer}
       >{children}</ScrollView>
     </KeyboardAvoidingView>
   </Modal>;

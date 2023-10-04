@@ -1,4 +1,4 @@
-import {View, ViewStyle} from 'react-native';
+import {View, ViewStyle, Platform} from 'react-native';
 
 
 const BottomToolbar = ({view, children}) => {
@@ -8,12 +8,18 @@ const BottomToolbar = ({view, children}) => {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
     width: view.width,
-    paddingTop: view.height * 0.01,
-    paddingLeft: view.width * 0.01,
-    paddingRight: view.width * 0.01,
-    paddingBottom: view.height * 0.01,
-    boxShadow: "1px 1px 10px black"
+    height: 64,
+    borderColor: '#ffffff33',
+    borderWidth: Platform.OS === 'web' ? 0 : 1,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+    boxShadow: '-1px -1px 5px #00000066',
+    backgroundColor: '#202029'
   };
 
   const innerContainer:ViewStyle = {

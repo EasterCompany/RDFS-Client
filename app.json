@@ -23,6 +23,11 @@
         "backgroundColor": "#202029"
       }
     },
+    "androidNavigationBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#202029",
+      "visible": "immersive"
+    },
     "web": {
       "favicon": "./assets/images/rdfs.png",
       "publicPath": "/static/rdfs"

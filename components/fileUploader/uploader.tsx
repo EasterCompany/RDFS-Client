@@ -12,7 +12,8 @@ import {
   ScrollView,
   ViewStyle,
   TextStyle,
-  PressableStyle
+  PressableStyle,
+  Platform
 } from 'react-native';
 import fileSize from '../../library/fileSize';
 import {serverAdr, USER} from '../../shared/library/api';
@@ -33,11 +34,38 @@ const Uploader = ({view}:Uploader) => {
   const [totalSavedPercentage, setTotalSavedPercentage] = useState<number>(0);
   const fileToUpload = useRef<number>(0);
 
+  const selectFilesToUpload = async () => {
+    try {
+      const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: false});
+      if (!picker.canceled) {
+        console.log('PICKER:', picker);
+        console.log('PICKER.ASSETS:', picker.assets);
+        setSelectedFiles(selectedFiles.concat(picker.assets));
+      }
+    } catch (error) {
+      alert("Sorry, there was a problem with one or more of the files you selected.");
+    }
+  };
+
   const uploadNextFile = async () => {
     const user = await USER();
-
     const formData = new FormData();
-    formData.append('file', selectedFiles[fileToUpload.current].file, selectedFiles[fileToUpload.current].file.name);
+
+    Platform.OS === 'web' ?
+      formData.append(
+        'file',
+        selectedFiles[fileToUpload.current].file,
+        selectedFiles[fileToUpload.current].file.name
+      )
+    :
+      formData.append(
+        'file',
+        {
+          uri: selectedFiles[fileToUpload.current].uri,
+          name: selectedFiles[fileToUpload.current].name,
+          type: selectedFiles[fileToUpload.current].mimeType
+        }
+      )
 
     const req = new XMLHttpRequest();
     req.upload.addEventListener("progress", (event) => {
@@ -49,10 +77,12 @@ const Uploader = ({view}:Uploader) => {
     });
     req.addEventListener("load", (event) => {
       const resp = JSON.parse(event.target.response);
-      setTotalUploadSize(totalUploadSize + resp.data.uploadSize);
-      setTotalCompressedSize(totalCompressedSize + resp.data.compressedSize);
-      if (totalUploadSize > 0 && totalCompressedSize > 0) setTotalSavedPercentage(
-        ((totalUploadSize - totalCompressedSize) / totalUploadSize) * 100
+      const newTotalUploadSize = totalUploadSize + resp.data.uploadSize;
+      const newTotalCompressedSize = totalCompressedSize + resp.data.compressedSize
+      setTotalUploadSize(newTotalUploadSize);
+      setTotalCompressedSize(newTotalCompressedSize);
+      if (newTotalUploadSize > 0 && newTotalCompressedSize > 0) setTotalSavedPercentage(
+        ((newTotalUploadSize - newTotalCompressedSize) / newTotalUploadSize) * 100
       );
       setSelectedFiles(c => {
         c[fileToUpload.current].compressedSize = fileSize(resp.data.compressedSize);
@@ -75,21 +105,25 @@ const Uploader = ({view}:Uploader) => {
     isUploading &&
     selectedFiles.length > fileToUpload.current &&
     selectedFiles[fileToUpload.current].uploadStatus === undefined
-  ) uploadNextFile();
+  ) {
+    try {
+      uploadNextFile();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const scroll:ViewStyle = {
     width: view.width,
-    height: view.height * 0.98 - 42,
+    maxHeight: view.height - 64,
     backgroundColor: '#202029'
   };
 
   const scrollContainer:ViewStyle = {
-    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    width: view.width,
-    paddingVertical: 20
+    width: view.width
   };
 
   const container:ViewStyle = {
@@ -133,18 +167,18 @@ const Uploader = ({view}:Uploader) => {
     marginRight: 'auto',
     marginBottom: 28,
     borderWidth: 1,
-    borderColor: '#ffffff99',
+    borderColor: '#ffffff',
     borderRadius: 6,
   };
 
   const selectBtn:PressableStyle = {
-    maxWidth: 200,
+    width: 150,
     height: 42,
     backgroundColor: 'transparent'
   };
 
   const uploadBtn:PressableStyle = {
-    maxWidth: 200,
+    width: 150,
     height: 42,
     opacity: selectedFiles.length === 0 || isUploading ? 0.1 : 1
   };
@@ -168,26 +202,16 @@ const Uploader = ({view}:Uploader) => {
       totalSavedPercentage < 0 ? 'rgb(200,20,20)' :
       'rgb(200,200,200)',
     fontSize: 16,
-    fontFamily: 'Metro-Thin',
-    marginLeft: 12
+    fontFamily: 'Metro-Thin'
   };
 
-  const selectFilesToUpload = async () => {
-    try {
-      const picker = await DocumentPicker.getDocumentAsync({multiple: true, copyToCacheDirectory: false});
-      setSelectedFiles(selectedFiles.concat(picker.assets));
-    } catch (error) {
-      alert("Sorry, there was a problem with one or more of the files you selected.");
-    }
-  };
-
-  return <>
+  return <View style={{ width: view.width, height: view.height }}>
     <ScrollView
-      style={scroll}
-      contentContainerStyle={scrollContainer}
-    >
+        style={scroll}
+        contentContainerStyle={scrollContainer}
+      >
       <View style={container}>
-        <Text style={h1}>File Upload</Text>
+        <Text style={h1}>File Uploader</Text>
         <View style={selectedFilesSection}>
           {
             selectedFiles.length === 0 ? <Text style={h2}>No files selected...</Text> :
@@ -214,15 +238,19 @@ const Uploader = ({view}:Uploader) => {
           style={selectBtn}
           onPress={selectFilesToUpload}
         />
-        <Text style={bottomBarFileSizeText}>
-          Uploaded: {fileSize(totalUploadSize)}
-        </Text>
-      </View>
-      <View style={bottomBarButtonContainer}>
-        <Text style={bottomBarFileSizeText}>
-          Saved: {fileSize(totalUploadSize - totalCompressedSize)}
-          <Text style={savedPercentage}>({Math.ceil(totalSavedPercentage)}%)</Text>
-        </Text>
+        {
+          view.width > 720 ? <>
+            <Text style={bottomBarFileSizeText}>
+              Uploaded: {fileSize(totalUploadSize)}
+            </Text>
+            <Text style={bottomBarFileSizeText}>
+              Saved: {fileSize(totalUploadSize - totalCompressedSize)}&nbsp;
+              <Text style={savedPercentage}>({Math.ceil(totalSavedPercentage)}%)</Text>
+            </Text>
+            </>
+          :
+            <></>
+        }
         <TextBtn
           text="Upload"
           style={uploadBtn}
@@ -231,7 +259,7 @@ const Uploader = ({view}:Uploader) => {
         />
       </View>
     </BottomToolbar>
-  </>
+  </View>
 };
 
 

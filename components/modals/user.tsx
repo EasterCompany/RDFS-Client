@@ -356,13 +356,13 @@ const userFullName = (user) => {
 
 const subView:ViewStyle = {
   alignItems: 'center',
+  verticalAlign: 'middle',
   justifyContent: 'center',
   width: '100%',
-  minHeight: '100%'
+  height: '100%'
 }
 
 const bannerSection:ViewStyle = {
-  top: 0,
   width: '100%',
   height: '20%',
   marginBottom: 48,
@@ -373,7 +373,7 @@ const bannerImage:ImageStyle = {
   width: '100%',
   height: '100%',
   marginBottom: '-20%'
-}
+};
 
 const displayImage:ImageStyle = {
   width: 132,
@@ -393,7 +393,6 @@ const detail:TextStyle = {
   color: '#202029',
   textAlign: 'center',
   fontSize: 18,
-  fontWeight: "500",
   fontFamily: 'Metro',
   marginBottom: 12,
 };
@@ -402,7 +401,6 @@ const detailMinor:TextStyle = {
   color: '#202029',
   textAlign: 'center',
   fontSize: 16,
-  fontWeight: "500",
   fontFamily: 'Metro-Thin',
   marginBottom: 12,
 };
@@ -414,7 +412,7 @@ const detailSection:ViewStyle = {
 const formBtn:ViewStyle = {
   marginTop: 0,
   marginBottom: 16
-}
+};
 
 const profileBtn:any = {
   color: '#202029',

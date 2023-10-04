@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { isTemplateTag } from './shared/library/devTools';
 import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
 import { __INIT_USER__, USER, logout, oapi, isNative, serverAdr } from './shared/library/api';
-import { NativeEventEmitter } from 'react-native';
 import {
   View,
   Text,
@@ -13,6 +12,7 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  NativeEventEmitter
 } from 'react-native';
 // Components
 import Navbar from './components/header/navbar';
@@ -28,7 +28,6 @@ import ServerOffline from './views/serverOffline';
 import ViewManager from './views/viewManager';
 // Styles
 import theme from './App.style';
-import { isLoggedIn } from '../dashboard/src/shared/library/api';
 
 /* Dev Mode Web Compatibility */
 if (!isNative) {
@@ -38,25 +37,14 @@ if (!isNative) {
     document.title = `[DEV] ${process.env.REACT_APP_NAME}`;
 };
 
-/* Load Custom Fonts */
-const loadCustomFonts = async () => {
-  return await Font.loadAsync({
-    'Metro': require('./shared/assets/fonts/Metropolis-Regular.otf'),
-    'Metro-Thin': require('./shared/assets/fonts/Metropolis-Thin.otf'),
-    'Metro-Bold': require('./shared/assets/fonts/Metropolis-Bold.otf'),
-    'Metro-Light': require('./shared/assets/fonts/Metropolis-Light.otf'),
-    'Metro-Italic': require('./shared/assets/fonts/Metropolis-RegularItalic.otf'),
-  });
-};
-
 /* Interfaces for Window & Screen Dimensions */
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
 
 const App = () => {
-  const [userData, setUserData] = useState(undefined);
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState<any>(undefined);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false);
   const [navMenuOpen, setNavMenu] = useState<boolean>(false);
   const [userModalOpen, setUserModal] = useState<boolean>(false);
   const [loginModalOpen, setLoginModal] = useState<boolean>(false);
@@ -65,11 +53,15 @@ const App = () => {
     window: windowDimensions,
     view: {
       width: windowDimensions.width,
-      height: Platform.OS === 'ios' ? windowDimensions.height - 74 : windowDimensions.height - 52
+      height:
+        Platform.OS === 'ios' ? windowDimensions.height - 72 :
+        Platform.OS === 'android' ? windowDimensions.height - 32:
+        windowDimensions.height - 52
     },
     screen: screenDimensions,
   });
-  const [serverStatus, setServerStatus] = useState(0);
+  const [serverStatus, setServerStatus] = useState<number>(0);
+  const [fontsLoaded, setFontsLoaded] = useState<boolean>(false);
   const eventHandlersAdded = useRef(false);
   const infoSocket = useRef(null);
   const eventEmitter = new NativeEventEmitter();
@@ -89,7 +81,13 @@ const App = () => {
   };
 
   useEffect(() => {
-    loadCustomFonts();
+    Font.loadAsync({
+      'Metro': require('./shared/assets/fonts/Metropolis-Regular.otf'),
+      'Metro-Thin': require('./shared/assets/fonts/Metropolis-Thin.otf'),
+      'Metro-Bold': require('./shared/assets/fonts/Metropolis-Bold.otf'),
+      'Metro-Light': require('./shared/assets/fonts/Metropolis-Light.otf'),
+      'Metro-Italic': require('./shared/assets/fonts/Metropolis-RegularItalic.otf'),
+    }).then(() => setFontsLoaded(true))
 
     if (userData === undefined) USER().then((localData) => {
       setUserData(localData);
@@ -155,6 +153,7 @@ const App = () => {
     }
   }, [ dimensions.window, dimensions.screen, userData ]);
 
+  if (!fontsLoaded) return <></>
   return <>
     <StatusBar barStyle="light-content" backgroundColor="#202029"/>
     <View>
@@ -174,7 +173,7 @@ const App = () => {
         serverStatus === 0 ? <Loading view={dimensions.view}/> :
         serverStatus === -1 ? <ServerOffline view={dimensions.view}/> :
         serverStatus === 1 && userIsLoggedIn ? <ViewManager view={dimensions.view}/> :
-        <NoUser view={dimensions.window}/>
+        <NoUser view={dimensions.view}/>
       }
 
       {/* Modals & Overlays */}

@@ -15,47 +15,45 @@ import fileIcon from '../../library/fileIcon';
 
 type File = {
   file: any,
-  size: number
+  horizontalMargin: number,
+  boxSize: number
 };
 
 
-const File = ({file, size}:File) => {
+const File = ({file, boxSize, horizontalMargin}:File) => {
   const [ isHover, setHover ] = useState(false);
   const [ isPress, setPress ] = useState(false);
   const name = `${file.name}${file.ext}`;
   const icon = fileIcon(file.ext, file.mimeType);
   const originalSize = fileSize(file.size);
   const compressedSize = fileSize(file.compressedSize);
-  if (size < 164) size = 164;
 
   const containerStyle:PressableStyle = {
     alignItems: 'center',
     justifyContent: 'flex-start',
     overflow: 'hidden',
     cursor: 'pointer',
-    minWidth: 164,
-    width: size,
-    minHeight: 164,
-    height: size,
+    width: boxSize,
+    height: boxSize,
     padding: isPress ? 0 : 1,
     borderWidth: isPress ? 2 : 1,
     borderRadius: 3,
     borderColor: isPress ? '#fe8605' : '#ffffff66',
     backgroundColor: isHover ? '#fe860533' : 'rgba(0,0,0,0)',
     marginTop: 16,
-    marginLeft: 16,
-    marginRight: 16,
+    marginLeft: horizontalMargin,
+    marginRight: horizontalMargin,
     marginBottom: 16
   };
 
   const iconImage:ImageStyle = {
-    width: size - 52,
-    height: size - 52
+    width: boxSize - 52,
+    height: boxSize - 52
   };
 
   const detailContainer:ViewStyle = {
     textAlign: 'left',
-    width: size,
+    width: boxSize,
     height: 52,
     paddingTop: 6,
     paddingLeft: 6,
@@ -86,8 +84,6 @@ const File = ({file, size}:File) => {
   >
     <Image
       source={icon}
-      width={size}
-      height={size}
       style={iconImage}
     />
     <View style={detailContainer}>
