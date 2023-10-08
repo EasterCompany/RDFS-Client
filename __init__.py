@@ -24,7 +24,7 @@ class Client(client.NativeClient):
   # Client.API_DOMAIN is a string which tells the client where the api will be
   # hosted in production. This is essential for native clients as they won't
   # have a relative domain to access when deployed to Android/iOS.
-  API_DOMAIN:str = "http://192.168.1.152:8000"
+  API_DOMAIN:str = "https://rdfs.easter.company"
 
   def __init__(self) -> None:
     super().__init__()
