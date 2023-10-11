@@ -1,5 +1,5 @@
 // Components
-import TextBtn from '../buttons/text';
+import TextBtn from '../../shared/components/buttons-native/text';
 import StagedFile from './stagedFile';
 import BottomToolbar from '../footer/bottomToolbar';
 import * as DocumentPicker from 'expo-document-picker';
@@ -15,7 +15,7 @@ import {
   PressableStyle,
   Platform
 } from 'react-native';
-import fileSize from '../../library/fileSize';
+import fileSize from '../../shared/library/fileSize';
 import {serverAdr, USER} from '../../shared/library/api';
 
 type Uploader = {

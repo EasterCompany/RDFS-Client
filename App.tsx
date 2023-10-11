@@ -15,12 +15,12 @@ import {
   NativeEventEmitter
 } from 'react-native';
 // Components
-import Navbar from './components/header/navbar';
-import LoginModal from './components/modals/login';
-import RegisterModal from './components/modals/register';
-import UserModal from './components/modals/user';
-import SideMenu from './components/header/sideMenu';
-import NavMenuContent from './components/header/navMenuContent';
+import Navbar from './shared/components/navbar-native/navbar';
+import LoginModal from './shared/components/modals-native/login';
+import RegisterModal from './shared/components/modals-native/register';
+import UserModal from './shared/components/modals-native/user';
+import SideMenu from './shared/components/navbar-native/sideMenu';
+import NavMenuContent from './shared/components/navbar-native/navMenuContent';
 // Views
 import Loading from './views/loading';
 import NoUser from './views/noUser';

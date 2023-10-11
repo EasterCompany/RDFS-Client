@@ -1,8 +1,12 @@
 // Assets
-import checkSVG from '../../assets/svgs/check.svg';
-import closePNG from '../../assets/images/close.png';
+import checkSVG from '../../shared/assets/svgs/check.svg';
+import closePNG from '../../shared/assets/images/close.png';
 // Components
-import ImgBtn from '../buttons/img';
+import ImgBtn from '../../shared/components/buttons-native/img';
+import {
+  LinearGradient,
+  LinearGradientStyle
+} from 'expo-linear-gradient';
 // Library
 import {
   View,
@@ -13,9 +17,8 @@ import {
   ImageStyle,
   ActivityIndicator
 } from 'react-native';
-import fileSize from '../../library/fileSize';
-import fileIcon from '../../library/fileIcon';
-import {LinearGradient, LinearGradientStyle} from 'expo-linear-gradient';
+import fileSize from '../../shared/library/fileSize';
+import fileIcon from '../../shared/library/fileIcon';
 
 type StagedFile = {
   name: string,

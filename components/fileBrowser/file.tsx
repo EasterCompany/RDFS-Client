@@ -10,8 +10,8 @@ import {
   ImageStyle,
   PressableStyle
 } from 'react-native';
-import fileSize from '../../library/fileSize';
-import fileIcon from '../../library/fileIcon';
+import fileSize from '../../shared/library/fileSize';
+import fileIcon from '../../shared/library/fileIcon';
 
 type File = {
   file: any,

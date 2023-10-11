@@ -1,12 +1,13 @@
 {
   "path": "clients/rdfs/shared",
   "file": [
-    "library/api.ts",
-    "library/devTools.ts",
-    "library/strings.ts",
-    "/assets/icons/check.svg"
   ],
   "module": [
-    "/assets/fonts/"
+    "assets/",
+    "components/buttons-native/",
+    "components/inputs-native/",
+    "components/modals-native/",
+    "components/navbar-native/",
+    "library/"
   ]
 }
