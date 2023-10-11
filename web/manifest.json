@@ -3,7 +3,7 @@
   "lang": "en",
   "name": "overlord_native_client",
   "short_name": "overlord_native_client",
-  "start_url": "/?app_type=pwa",
+  "start_url": "/",
   "orientation": "portrait",
   "background_color": "#202029",
   "theme_color": "#202029",

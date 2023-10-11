@@ -1,9 +1,23 @@
+// Components
+import Navbar from './shared/components/navbar-native/navbar';
+import LoginModal from './shared/components/modals-native/login';
+import RegisterModal from './shared/components/modals-native/register';
+import UserModal from './shared/components/modals-native/user';
+import SideMenu from './shared/components/navbar-native/sideMenu';
+import NavMenuContent from './shared/components/navbar-native/navMenuContent';
 // Library
 import * as Font from 'expo-font';
 import { useState, useEffect, useRef } from 'react';
 import { isTemplateTag } from './shared/library/devTools';
 import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
-import { __INIT_USER__, USER, logout, oapi, isNative, serverAdr } from './shared/library/api';
+import {
+  __INIT_USER__,
+  USER,
+  logout,
+  oapi,
+  isNative,
+  serverAdr
+} from './shared/library/api';
 import {
   View,
   Text,
@@ -14,20 +28,11 @@ import {
   Platform,
   NativeEventEmitter
 } from 'react-native';
-// Components
-import Navbar from './shared/components/navbar-native/navbar';
-import LoginModal from './shared/components/modals-native/login';
-import RegisterModal from './shared/components/modals-native/register';
-import UserModal from './shared/components/modals-native/user';
-import SideMenu from './shared/components/navbar-native/sideMenu';
-import NavMenuContent from './shared/components/navbar-native/navMenuContent';
 // Views
 import Loading from './views/loading';
 import NoUser from './views/noUser';
 import ServerOffline from './views/serverOffline';
 import ViewManager from './views/viewManager';
-// Styles
-import theme from './App.style';
 
 /* Dev Mode Web Compatibility */
 if (!isNative) {
