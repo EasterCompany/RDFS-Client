@@ -20,7 +20,7 @@ type File = {
 };
 
 
-const File = ({file, boxSize, horizontalMargin}:File) => {
+const File = ({file, boxSize, horizontalMargin, onPress}:File) => {
   const [ isHover, setHover ] = useState(false);
   const [ isPress, setPress ] = useState(false);
   const name = `${file.name}${file.ext}`;
@@ -76,7 +76,7 @@ const File = ({file, boxSize, horizontalMargin}:File) => {
 
   return <Pressable
     style={containerStyle}
-    onPress={() => {}}
+    onPress={onPress}
     onHoverIn={() => setHover(true)}
     onHoverOut={() => setHover(false)}
     onPressIn={() => setPress(true)}

@@ -4,11 +4,11 @@
     "slug": "rdfs",
     "version": "0.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/rdfs.png",
+    "icon": "./shared/assets/images/rdfs.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#202029",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./shared/assets/images/splash.png",
       "resizeMode": "contain"
     },
     "assetBundlePatterns": [
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/rdfs.png",
+        "foregroundImage": "./shared/assets/images/rdfs.png",
         "backgroundColor": "#202029"
       }
     },
@@ -29,7 +29,7 @@
       "visible": "immersive"
     },
     "web": {
-      "favicon": "./assets/images/rdfs.png",
+      "favicon": "./shared/assets/images/rdfs.png",
       "publicPath": "/static/rdfs"
     },
     "plugins": [

@@ -161,56 +161,52 @@ const App = () => {
   if (!fontsLoaded) return <></>
   return <>
     <StatusBar barStyle="light-content" backgroundColor="#202029"/>
-    <View>
-      {/* GUI Elements */}
-      <Navbar
-        view={dimensions.window}
-        loggedIn={userIsLoggedIn}
-        onPressLogin={toggleLoginModal}
-        onPressRegister={toggleRegisterModal}
-        onPressUser={toggleUserModal}
-        onPressNav={toggleNavMenu}
-        navMenuOpen={navMenuOpen}
-      />
-
-      {/* View Manager */}
-      {
-        serverStatus === 0 ? <Loading view={dimensions.view}/> :
-        serverStatus === -1 ? <ServerOffline view={dimensions.view}/> :
-        serverStatus === 1 && userIsLoggedIn ? <ViewManager view={dimensions.view}/> :
-        <NoUser view={dimensions.view}/>
-      }
-
-      {/* Modals & Overlays */}
-      {
-        userIsLoggedIn ?
-          <>
-            <UserModal
-              user={userData}
-              reCheckUserData={reCheckUserData}
-              visible={userModalOpen}
-              onClose={toggleUserModal}
-            />
-            {navMenuOpen && <SideMenu view={dimensions.view}>
-              <NavMenuContent/>
-            </SideMenu>}
-          </>
-        :
-          <>
-            <LoginModal
-              visible={loginModalOpen}
-              onClose={toggleLoginModal}
-              onLogin={reCheckUserData}
-            />
-            <RegisterModal
-              view={dimensions.view}
-              visible={registerModalOpen}
-              onClose={toggleRegisterModal}
-              onRegister={reCheckUserData}
-            />
-          </>
-      }
-    </View>
+    <Navbar
+      view={dimensions.window}
+      loggedIn={userIsLoggedIn}
+      onPressLogin={toggleLoginModal}
+      onPressRegister={toggleRegisterModal}
+      onPressUser={toggleUserModal}
+      onPressNav={toggleNavMenu}
+      navMenuOpen={navMenuOpen}
+    />
+    {
+      serverStatus === 0 ? <Loading view={dimensions.view}/> :
+      serverStatus === -1 ? <ServerOffline view={dimensions.view}/> :
+      serverStatus === 1 && userIsLoggedIn ? <ViewManager view={dimensions.view} userData={userData}/> :
+      <NoUser view={dimensions.view}/>
+    }
+    {
+      userIsLoggedIn ?
+      <>
+        <UserModal
+          user={userData}
+          reCheckUserData={reCheckUserData}
+          visible={userModalOpen}
+          onClose={toggleUserModal}
+        />
+        {
+          navMenuOpen &&
+          <SideMenu view={dimensions.view}>
+            <NavMenuContent/>
+          </SideMenu>
+        }
+      </>
+    :
+      <>
+        <LoginModal
+          visible={loginModalOpen}
+          onClose={toggleLoginModal}
+          onLogin={reCheckUserData}
+        />
+        <RegisterModal
+          view={dimensions.view}
+          visible={registerModalOpen}
+          onClose={toggleRegisterModal}
+          onRegister={reCheckUserData}
+        />
+      </>
+    }
   </>;
 };
 

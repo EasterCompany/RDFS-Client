@@ -8,7 +8,7 @@ import {ScrollView, View, ViewStyle, NativeEventEmitter} from 'react-native';
 const eventEmitter = new NativeEventEmitter();
 
 
-const ViewManager = ({view}:any) => {
+const ViewManager = ({view, userData}:any) => {
   const [currentView, setView] = useState<String>('browser');
   const eventHandlersAdded = useRef<bool>(false);
 
@@ -18,9 +18,13 @@ const ViewManager = ({view}:any) => {
     eventHandlersAdded.current = true;
   }
 
-  return currentView === 'browser' ? <Browser view={view}/> :
-  currentView === 'uploader' ? <Uploader view={view}/> :
-  <></>
+  return <View>
+    {
+      currentView === 'browser' ? <Browser view={view} userData={userData}/> :
+      currentView === 'uploader' ? <Uploader view={view}/> :
+      <></>
+    }
+  </View>
 };
 
 

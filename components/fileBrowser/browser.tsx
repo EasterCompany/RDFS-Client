@@ -1,13 +1,14 @@
 // Components
 import File from './file';
+import FileViewer from '../fileViewer/viewer';
 // Library
 import { useState, useRef } from 'react';
 import { ScrollView, View, NativeEventEmitter } from 'react-native';
 
 
-const Browser = ({view}:any) => {
+const Browser = ({view, userData}:any) => {
   const [userFiles, setUserFiles] = useState<any>([]);
-  const eventHandlersAdded = useRef<bool>(false);
+  const eventHandlersAdded = useRef<boolean>(false);
   const eventEmitter = new NativeEventEmitter();
   const horizontalMargin = view.width * 0.005;
   const boxSize =
@@ -46,7 +47,15 @@ const Browser = ({view}:any) => {
       file={file}
       boxSize={boxSize}
       horizontalMargin={horizontalMargin}
+      onPress={() => eventEmitter.emit(
+        'RDFSOpenFileViewer',
+        {
+          file: file,
+          user: userData
+        }
+      )}
     />)}
+    <FileViewer view={view}/>
   </ScrollView>;
 };
 

@@ -1,5 +1,5 @@
 // Assets
-import warningImg from '../assets/images/warning.png'
+import warningImg from '../shared/assets/images/warning.png'
 // Library
 import { ScrollView, Text, Image, TextStyle, ImageStyle, ViewStyle } from 'react-native';
 import { serverAdr } from '../shared/library/api';
