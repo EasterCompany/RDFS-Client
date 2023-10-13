@@ -83,6 +83,26 @@ const Viewer = ({view}:any) => {
         </View>
       :
 
+      fileData.startsWith('data:audio') ?
+        <View style={{
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingLeft: '5%',
+          paddingRight: '5%'
+        }}>
+          <Video
+            source={{ uri: fileData }}
+            style={{ width: '100%', height: '100%' }}
+            videoStyle={{ width: '100%', height: '50%' }}
+            resizeMode="contain"
+            useNativeControls
+          />
+        </View>
+      :
+
       fileData.startsWith('data:application/pdf') ?
         <WebView
           source={{ uri: fileData }}
