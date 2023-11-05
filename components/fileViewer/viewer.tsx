@@ -1,6 +1,7 @@
 // Assets
 import theme from '../../shared/assets/ec.style';
 // Components
+import Toolbar from './toolbar';
 import FadeModal from '../../shared/components/modals-native/fade';
 // Library
 import { USER } from '../../shared/library/api';
@@ -60,8 +61,10 @@ const Viewer = ({view}:any) => {
     visible={isOpen}
     onClose={() => setOpen(false)}
     style={modalContent}
-  >{
-      fileData === null ? <LoadingIndicator/> :
+  >
+    {
+      fileData === null ? <LoadingIndicator/> : <>
+      <Toolbar file={file}/>{
 
       fileData.startsWith('data:image') ?
         <Image
@@ -123,7 +126,7 @@ const Viewer = ({view}:any) => {
         />
         <Text style={loadingText}>No Preview Available</Text>
       </View>
-
+    }</>
   }</FadeModal>
 }
 
